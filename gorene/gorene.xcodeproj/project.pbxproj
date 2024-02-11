@@ -22,6 +22,7 @@
 		512A62C62B6973A7005BD723 /* MainModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 512A62C52B6973A7005BD723 /* MainModel.swift */; };
 		512A62C82B697462005BD723 /* QuestModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 512A62C72B697462005BD723 /* QuestModel.swift */; };
 		512A62CA2B697504005BD723 /* QuestService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 512A62C92B697504005BD723 /* QuestService.swift */; };
+		51BC332E2B7156B300F5E032 /* SettingsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51BC332D2B7156B300F5E032 /* SettingsModel.swift */; };
 		51C80C912B6EE91800670F6E /* TableButtonViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51C80C902B6EE91800670F6E /* TableButtonViewCell.swift */; };
 		51C80C942B6EEA7E00670F6E /* MainPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51C80C932B6EEA7E00670F6E /* MainPresenter.swift */; };
 		51DFFF812B6EDF0400499FE9 /* MainViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51DFFF802B6EDF0400499FE9 /* MainViewExtension.swift */; };
@@ -64,6 +65,7 @@
 		512A62C52B6973A7005BD723 /* MainModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainModel.swift; sourceTree = "<group>"; };
 		512A62C72B697462005BD723 /* QuestModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestModel.swift; sourceTree = "<group>"; };
 		512A62C92B697504005BD723 /* QuestService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestService.swift; sourceTree = "<group>"; };
+		51BC332D2B7156B300F5E032 /* SettingsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsModel.swift; sourceTree = "<group>"; };
 		51C80C902B6EE91800670F6E /* TableButtonViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableButtonViewCell.swift; sourceTree = "<group>"; };
 		51C80C932B6EEA7E00670F6E /* MainPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainPresenter.swift; sourceTree = "<group>"; };
 		51DFFF802B6EDF0400499FE9 /* MainViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewExtension.swift; sourceTree = "<group>"; };
@@ -125,6 +127,7 @@
 				511165362B669B9D00CAB252 /* AppDelegate.swift */,
 				511165692B669F1C00CAB252 /* CustomView */,
 				512A62C22B696673005BD723 /* Extension */,
+				51BC332C2B71566800F5E032 /* Settings */,
 				5111653F2B669B9D00CAB252 /* Assets.xcassets */,
 				511165412B669B9D00CAB252 /* LaunchScreen.storyboard */,
 				511165442B669B9D00CAB252 /* Info.plist */,
@@ -183,6 +186,14 @@
 				512A62C32B6966D9005BD723 /* UIKitExtension.swift */,
 			);
 			path = Extension;
+			sourceTree = "<group>";
+		};
+		51BC332C2B71566800F5E032 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				51BC332D2B7156B300F5E032 /* SettingsModel.swift */,
+			);
+			path = Settings;
 			sourceTree = "<group>";
 		};
 		51C80C922B6EE98900670F6E /* Quest */ = {
@@ -336,6 +347,7 @@
 				512A62C42B6966D9005BD723 /* UIKitExtension.swift in Sources */,
 				511165392B669B9D00CAB252 /* SceneDelegate.swift in Sources */,
 				5111656B2B669F6E00CAB252 /* CustomButton.swift in Sources */,
+				51BC332E2B7156B300F5E032 /* SettingsModel.swift in Sources */,
 				51C80C912B6EE91800670F6E /* TableButtonViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
