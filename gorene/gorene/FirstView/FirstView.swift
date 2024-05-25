@@ -40,7 +40,10 @@ final class FirstView: UIViewController {
 
     }
     private func startGame(){
-        self.navigationController?.pushViewController(MainView(), animated: true)
+        let mainPresenter  = MainPresenter()
+        let mainView = MainView(mainPresenter: mainPresenter)
+        mainPresenter.mainView = mainView
+        self.navigationController?.pushViewController(mainView, animated: true)
 
     }
 

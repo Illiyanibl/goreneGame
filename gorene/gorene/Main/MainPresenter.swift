@@ -6,3 +6,67 @@
 //
 
 import Foundation
+protocol MainPresenterProtocol: AnyObject {
+    func newState()
+    func start()
+
+    func actionPressed(action: Int)
+
+}
+final class MainPresenter: MainPresenterProtocol {
+    weak var mainView : MainViewProtocol?
+    let questService: QuestServiceProtocol
+    init(mainView: MainViewProtocol? = nil) {
+        self.mainView = mainView
+        self.questService = QuestService()
+        questService.mainPresenter = self
+    }
+    func start(){
+        newState()
+    }
+
+    func newState(){
+        let background: String? = questService.currentQuest?.questStates[questService.currentQuestState].background
+        background != nil ? mainView?.pushBackgroundImage(background ?? "Nil") : ()
+
+        let statusText: String? = questService.currentQuest?.questStates[questService.currentQuestState].status
+        statusText != nil ? mainView?.pushStatusLabel(text: statusText ?? "Nil") : ()
+
+        let mainText: String = questService.currentQuest?.questStates[questService.currentQuestState].mainText ?? "Error"
+        mainView?.pushMainText(text: mainText)
+
+        //
+        let actions = questService.currentQuest?.questStates[questService.currentQuestState].actions
+        var actionTitle: [String] = []
+        var actionDesctiption : [String?] = []
+
+        //Массив действий(кнопок)
+        actions?.forEach(){
+            let isPossible =  actionIsPossible(requiredParameters: $0.requiredParameters)
+            if !isPossible {}
+            else {
+                actionTitle.append($0.actionText)
+                actionDesctiption.append($0.actionDesctiption)
+            }
+        }
+        mainView?.pushPlayButton(actionButtonTitle: actionTitle, detailsButtonText: actionDesctiption)
+    }
+
+    func actionIsPossible(requiredParameters: [String : Int]?) -> Bool{
+        return true
+    }
+
+    func actionPressed(action: Int){
+        print("Pressed \(action)")
+        let actionPressed = questService.currentQuest?.questStates[questService.currentQuestState].actions[action]
+        let newState = actionPressed?.actionNextState
+        let newCurrentQuestName = actionPressed?.actionNextQuest
+        if newCurrentQuestName == nil {
+            guard let newState else { return }
+            questService.changeState(newState: newState)
+        } else {
+            guard let newCurrentQuestName else { return }
+            questService.changeQuest(newQuest: newCurrentQuestName, newState: newState ?? 0)
+        }
+    }
+}

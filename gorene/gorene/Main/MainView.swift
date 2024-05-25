@@ -4,18 +4,38 @@
 //
 //  Created by Illya Blinov on 30.01.24.
 //
-
 import UIKit
 
 protocol MainViewProtocol: AnyObject {
-    func setBackgroundImage(_ image: String)
     func getColorTheme()
+    //MARK: func for MainPresenter
+    func pushBackgroundImage(_ image: String)
+    func pushStatusLabel(text: String)
+    func pushLocationText(text: String)
+    func pushMainText(text: String)
+    func pushPlayButton(actionButtonTitle: [String], detailsButtonText: [String?])
 }
 
 final class MainView: UIViewController, MainViewProtocol {
 
+    var mainPresenter: MainPresenterProtocol
+
+    let mainFontParagraphStyle: NSMutableParagraphStyle = {
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.lineSpacing = 8
+        paragraphStyle.hyphenationFactor = 10
+        paragraphStyle.paragraphSpacing = 8
+        return paragraphStyle
+    }()
+
     private let labelFont = UIFont.italicSystemFont(ofSize: 18)
-    private var themeColor : [UIColor] { SettingsModel.share.colorTheme.getColor()}
+    private let mainFont = UIFont.italicSystemFont(ofSize: 18)
+    private let titleFont = UIFont.italicSystemFont(ofSize: 20)
+    var themeColor : [UIColor] { SettingsModel.share.colorTheme.getColor()}
+    var actionButtons : [String] = []
+    var detailsButtons : [String?] = []
+
+    lazy var touchDetailsViewClose = UITapGestureRecognizer(target: self, action: #selector(detailsViewClose))
 
     lazy var mainTextView: UIScrollView = {
         let view = UIScrollView()
@@ -29,7 +49,7 @@ final class MainView: UIViewController, MainViewProtocol {
         let label = UILabel()
         label.numberOfLines = 0
         label.lineBreakMode = .byWordWrapping
-        label.font = UIFont.systemFont(ofSize: 14, weight: .light)
+        label.font = mainFont
         return label
     }()
 
@@ -75,23 +95,12 @@ final class MainView: UIViewController, MainViewProtocol {
 
     lazy var playerButton: UIButton = {
         let button: UIButton = CustomButton(title: "")
-        button.setBackgroundImage(UIImage(named: "player"), for: .normal)
+        button.setBackgroundImage(UIImage(systemName: "person.crop.circle"), for: .normal)
         button.layer.masksToBounds = true
-        button.layer.cornerRadius = 12
+        button.layer.cornerRadius = 25
         button.layer.borderWidth = 2
         button.layer.borderColor = UIColor.systemFill.cgColor
         return button
-    }()
-
-    lazy var playButtonTable: UITableView = {
-        let table = UITableView()
-        table.delegate = self
-        table.dataSource = self
-        table.backgroundColor = .clear
-        table.register(TableButtonViewCell.self, forCellReuseIdentifier: TableButtonViewCell.identifier)
-        table.showsVerticalScrollIndicator = false
-        table.layer.cornerRadius = 12
-        return table
     }()
 
     lazy var settingsButton: UIButton = {
@@ -101,38 +110,81 @@ final class MainView: UIViewController, MainViewProtocol {
                     SettingsModel.share.chooseColorTheme(colorTheme: .mainDarck)
                 }
             self?.getColorTheme() })
-        button.setBackgroundImage(UIImage(named: "settings"), for: .normal)
+        button.setBackgroundImage(UIImage(systemName: "circle.grid.3x3.circle.fill"), for: .normal)
         button.layer.masksToBounds = true
-        button.layer.cornerRadius = 12
+        button.layer.cornerRadius = 25
         return button
     }()
 
     lazy var saveButton: UIButton = {
         let button: UIButton = CustomButton(title: "", action: { [weak self] in
             self?.dismiss(animated: true)
-
         })
-        button.setBackgroundImage(UIImage(named: "save"), for: .normal)
+        let saveImage = UIImage(systemName: "folder.circle")
+        button.setBackgroundImage(saveImage, for: .normal)
         button.layer.masksToBounds = true
-        button.layer.cornerRadius = 12
+        button.layer.cornerRadius = 25
         button.layer.borderWidth = 2
         button.layer.borderColor = UIColor.systemFill.cgColor
         return button
     }()
     lazy var loadButton: UIButton = {
-        let button: UIButton = CustomButton(title: "L", action: { [weak self] in
+        let button: UIButton = CustomButton(title: "", action: { [weak self] in
             self?.dismiss(animated: true)
-
         })
-   //     button.setBackgroundImage(UIImage(named: "save"), for: .normal)
+        button.setBackgroundImage(UIImage(systemName: "doc.circle"), for: .normal)
         button.layer.masksToBounds = true
-        button.layer.cornerRadius = 12
+        button.layer.cornerRadius = 25
         button.layer.borderWidth = 2
         button.layer.borderColor = UIColor.systemFill.cgColor
         return button
     }()
 
+    lazy var playButtonTable: UITableView = {
+        let table = UITableView(frame: .zero, style: .plain)
+        table.delegate = self
+        table.dataSource = self
+        table.backgroundColor = .clear
+        table.register(TableButtonViewCell.self, forCellReuseIdentifier: TableButtonViewCell.identifier)
+        table.rowHeight = 56
+        table.showsVerticalScrollIndicator = false
+        table.layer.cornerRadius = 12
+        return table
+    }()
 
+    lazy var detailsView: UIView = {
+        let view = UIView()
+        view.layer.cornerRadius = 12
+        view.layer.borderWidth = 2
+        view.layer.borderColor = UIColor.systemFill.cgColor
+        view.isHidden = true
+        view.alpha = 1
+        return view
+    }()
+
+    lazy var detailsTitleLabel: UILabel = {
+        let label = UILabel()
+        label.numberOfLines = 1
+        label.font = titleFont
+        label.isHidden = true
+        return label
+    }()
+    lazy var detailsLabel: UILabel = {
+        let label = UILabel()
+        label.numberOfLines = 0
+        label.font = mainFont
+        label.isHidden = true
+        return label
+    }()
+
+    init(mainPresenter: MainPresenterProtocol) {
+        self.mainPresenter = mainPresenter
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 
 
     override func viewDidLoad() {
@@ -151,27 +203,17 @@ final class MainView: UIViewController, MainViewProtocol {
     }
 
     private func setupView(){
+        mainPresenter.start()
         view.backgroundColor = .black
         appleColorTheme(colors: themeColor)
-        setBackgroundImage("backgraund1")
+
         setupSubView()
-        view.addSubViews([mainTextView, informationView, playButtonTable, playerButton, saveButton, loadButton, buttonCountView])
+        view.addSubViews([mainTextView, informationView, playButtonTable, playerButton, saveButton, loadButton])
         setupConstraints()
     }
 
     private func setupSubView(){
         mainTextView.addSubViews([mainTextLabel])
-        DispatchQueue.global(qos: .utility).async {
-            var mainText = " Такой длинный текст написанный Андреем \n"
-            (1...7).forEach(){ _ in mainText += mainText}
-            DispatchQueue.main.async { [weak self] in
-                self?.mainTextLabel.text = mainText
-            }
-        }
-        locationLabel.text = { return "Окрестности условных Афин"}()
-        let name = "Андрей"
-        let status = "Рыцарь изада"
-        statusLabel.text = { return "\(name) .... \(status)"}()
         informationView.addSubViews([locationLabel, statusLabel, settingsButton])
     }
 
@@ -179,26 +221,117 @@ final class MainView: UIViewController, MainViewProtocol {
         appleColorTheme(colors: themeColor)
     }
 
-    internal func setBackgroundImage(_ image: String){
+    internal func pushBackgroundImage(_ image: String){
         let backgraungImage = UIImage(named: image)
         guard let backgraungImage else { return }
         view.layer.contents = backgraungImage.cgImage
     }
 
+    internal func pushMainText(text: String){
+        let attrText = NSMutableAttributedString(string: text)
+        attrText.addAttribute(.paragraphStyle, value:mainFontParagraphStyle, range:NSMakeRange(0, attrText.length))
+        mainTextLabel.attributedText = attrText
+       // mainTextLabel.text = text
+    }
+
+    internal func pushPlayButton(actionButtonTitle: [String], detailsButtonText: [String?]){
+        actionButtons = actionButtonTitle
+        print(actionButtonTitle)
+        detailsButtons = detailsButtonText
+        playButtonTable.reloadData()
+
+    }
+
+    internal func pushLocationText(text: String){
+        locationLabel.text = text
+    }
+
+    internal func pushStatusLabel(text: String){
+        statusLabel.text = text
+    }
+
+    internal func pushStats(stats: [String : Int]){
+    }
+
+    @objc func detailsViewClose(){
+                hideDetails()
+    }
+
+    internal func showDetails(details: String?, action: String){
+        detailsTitleLabel.text = action
+        detailsLabel.text = details ?? ""
+        detailsView.addSubViews([detailsTitleLabel, detailsLabel])
+        view.addSubview(detailsView)
+        detailsView.isHidden = false
+        detailsView.frame = CGRect(x: 0, y:0 , width: 10, height: 10)
+        detailsView.center = CGPoint(x: self.mainTextView.center.x, y : self.playButtonTable.center.y)
+        animateShowDetails()
+        view.needsUpdateConstraints()
+        view.layoutIfNeeded()
+    }
+    private func hideDetails(){
+        detailsTitleLabel.removeFromSuperview()
+        detailsLabel.removeFromSuperview()
+        detailsConstraints(0)
+        animateHideDetails()
+        view.needsUpdateConstraints()
+        view.layoutIfNeeded()
+    }
+
+    private func animateShowDetails(){
+        let animator = UIViewPropertyAnimator(duration: 0.3, curve: .linear){ [weak self] in
+            guard let self else { return }
+            self.detailsView.frame = CGRect(x: 0, y: 0, width: self.mainTextView.frame.width, height: self.playButtonTable.frame.height)
+            self.detailsView.center = CGPoint(x: self.mainTextView.center.x, y : self.playButtonTable.center.y)
+        }
+        let finichAnimator = UIViewPropertyAnimator(duration: 0.0, curve: .linear){ [weak self] in
+            guard let self else { return }
+            self.detailsConstraints()
+            self.detailsTitleLabel.isHidden = false
+            self.detailsLabel.isHidden = false
+            self.detailsView.addGestureRecognizer(touchDetailsViewClose)
+        }
+        animator.addCompletion {_ in
+            finichAnimator.startAnimation(afterDelay: 0.1)
+        }
+        animator.startAnimation(afterDelay: 0.0)
+    }
+
+    private func animateHideDetails(){
+        let animator = UIViewPropertyAnimator(duration: 0.3, curve: .linear){ [weak self] in
+            guard let self else { return }
+            self.detailsTitleLabel.isHidden = true
+            self.detailsLabel.isHidden = true
+            self.detailsView.frame = CGRect(x: 0, y: 0, width: 0, height: 0)
+            self.detailsView.center = CGPoint(x: self.mainTextView.center.x, y : self.playButtonTable.center.y)
+        }
+        animator.addCompletion {[weak self] _ in
+            guard let self else { return }
+            self.detailsView.removeGestureRecognizer(touchDetailsViewClose)
+            self.detailsView.removeFromSuperview()
+        }
+        animator.startAnimation(afterDelay: 0.0)
+    }
+
+
     private func appleColorTheme(colors: [UIColor]){
         guard colors.count == 4 else { return }
         mainTextView.backgroundColor = colors[0]
         informationView.backgroundColor = colors[1]
-        locationLabel.textColor = colors[2]
+        locationLabel.textColor = colors[2].withAlphaComponent(1)
         statusLabel.textColor = colors[2]
-        mainTextLabel.textColor = colors[3]
+        mainTextLabel.textColor = colors[3].withAlphaComponent(1)
         settingsButton.backgroundColor = colors[2]
-        settingsButton.tintColor = colors[0]
+        settingsButton.tintColor = colors[0].withAlphaComponent(1)
         playerButton.backgroundColor = colors[1]
-        playerButton.tintColor = colors[2]
+        playerButton.tintColor = colors[2].withAlphaComponent(1)
         saveButton.backgroundColor = colors[1]
-        saveButton.tintColor = colors[2]
+        saveButton.tintColor = colors[2].withAlphaComponent(1)
         loadButton.backgroundColor = colors[1]
-        loadButton.tintColor = colors[2]
+        loadButton.tintColor = colors[2].withAlphaComponent(1)
+        detailsView.backgroundColor = colors[0]
+        detailsTitleLabel.textColor = colors[2].withAlphaComponent(1)
+        detailsLabel.textColor = colors[3].withAlphaComponent(1)
+        playButtonTable.reloadData()
     }
 }

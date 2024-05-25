@@ -15,7 +15,7 @@ final class PlayerModel: PlayerModelProtocol {
     let questService: QuestServiceProtocol
     var name: String = ""
     var stats: [String : Int] = [:]
-    var currentMainQuest: QuestModel? { questService.CurrentMainQuest }
+    var currentMainQuest: QuestModel? { questService.currentQuest }
     var currentQuest: [QuestModel] = []
 
     init(questService: QuestServiceProtocol, name: String) {

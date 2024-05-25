@@ -7,36 +7,45 @@
 
 import UIKit
 extension MainView: UITableViewDelegate, UITableViewDataSource {
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let section = 5
-        // перенести в презентер
-        if section > 4 { buttonCountView.backgroundColor = .systemRed}
+        let section = actionButtons.count
         return section
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier:
                                                     TableButtonViewCell.identifier, for: indexPath) as!  TableButtonViewCell
-        cell.setupCell(gotAction: { [weak self] in
+        cell.setupCell(actionButtonTitle: actionButtons[indexPath.row], isEnable: true, detailsIsOff: (detailsButtons[indexPath.row] == nil))
+        cell.actionButtonAction = {[weak self] in
             guard let self else { return }
-            let colors: [UIColor] = [UIColor.systemOrange, UIColor.systemRed, UIColor.systemYellow, UIColor.systemGreen]
-            self.mainTextLabel.text = "Выбрано действие \(indexPath.row) \n Поздравляю с этим!"
-            cell.contentView.backgroundColor = colors.randomElement()
-            cell.detailedButton.tintColor = cell.contentView.backgroundColor
-
-        })
-        cell.actionButton.setTitle("Выполнить действие  \(indexPath.row)", for: .normal)
+            self.mainPresenter.actionPressed(action: indexPath.row) }
+        cell.detailsButtonAction = { [weak self] in
+            guard let self else { return }
+            self.showDetails(details: self.detailsButtons[indexPath.row] , action: self.actionButtons[indexPath.row])
+        }
+        cell.appleColorTheme(colors: themeColor)
         return cell
     }
 
-
+    func detailsConstraints(_ state: Int = 1){
+        let defaultIndent: CGFloat = 12
+        let constraints = [detailsTitleLabel.leadingAnchor.constraint(equalTo: detailsView.leadingAnchor, constant: defaultIndent),
+                           detailsTitleLabel.trailingAnchor.constraint(equalTo: detailsView.trailingAnchor, constant: -defaultIndent),
+                           detailsTitleLabel.topAnchor.constraint(equalTo: detailsView.topAnchor, constant: defaultIndent),
+                           detailsLabel.leadingAnchor.constraint(equalTo: detailsView.leadingAnchor, constant: defaultIndent),
+                           detailsLabel.trailingAnchor.constraint(equalTo: detailsView.trailingAnchor, constant: -defaultIndent),
+                           detailsLabel.topAnchor.constraint(equalTo: detailsTitleLabel.bottomAnchor, constant: defaultIndent)]
+        if state == 1 { NSLayoutConstraint.activate(constraints)}
+        if state == 0 { NSLayoutConstraint.deactivate(constraints)}
+    }
 
     func setupConstraints(){
         let safeArea = view.safeAreaLayoutGuide
         let defaultIndent: CGFloat = 12
         let nearIndent: CGFloat = 3
-        let topLineHeight: CGFloat = 120
-        let bottomLineHeight: CGFloat = 224
+        let topLineHeight: CGFloat = 80
+        let bottomLineHeight: CGFloat = 226
         let buttonHeight: CGFloat = 50
         NSLayoutConstraint.activate([
             //MARK: top view group
@@ -63,8 +72,9 @@ extension MainView: UITableViewDelegate, UITableViewDataSource {
 
             mainTextLabel.topAnchor.constraint(equalTo: mainTextView.topAnchor, constant: defaultIndent / 2),
             mainTextLabel.bottomAnchor.constraint(equalTo: mainTextView.bottomAnchor, constant: -defaultIndent / 2),
-            mainTextLabel.leadingAnchor.constraint(equalTo: mainTextView.leadingAnchor, constant: defaultIndent / 2),
-            mainTextLabel.trailingAnchor.constraint(equalTo: mainTextView.trailingAnchor, constant: -defaultIndent / 2),
+            mainTextLabel.leadingAnchor.constraint(equalTo: mainTextView.leadingAnchor, constant: defaultIndent),
+            //mainTextLabel.trailingAnchor.constraint(equalTo: mainTextView.trailingAnchor, constant: -defaultIndent),
+            mainTextLabel.widthAnchor.constraint(equalTo: mainTextView.widthAnchor, constant: -defaultIndent * 2),
             //MARK: botttom view group
             playButtonTable.leadingAnchor.constraint(equalTo: playerButton.trailingAnchor, constant: defaultIndent),
             playButtonTable.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -defaultIndent),
@@ -80,16 +90,16 @@ extension MainView: UITableViewDelegate, UITableViewDataSource {
             saveButton.topAnchor.constraint(equalTo: playerButton.bottomAnchor, constant: nearIndent * 2),
             saveButton.heightAnchor.constraint(equalToConstant: buttonHeight),
             saveButton.widthAnchor.constraint(equalTo: saveButton.heightAnchor),
-            
+
             loadButton.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: defaultIndent),
             loadButton.topAnchor.constraint(equalTo: saveButton.bottomAnchor, constant: nearIndent * 2),
             loadButton.heightAnchor.constraint(equalToConstant: buttonHeight),
             loadButton.widthAnchor.constraint(equalTo: loadButton.heightAnchor),
 
-            buttonCountView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: defaultIndent),
-            buttonCountView.bottomAnchor.constraint(equalTo: playButtonTable.bottomAnchor, constant: -nearIndent),
-            buttonCountView.heightAnchor.constraint(equalToConstant: buttonHeight),
-            buttonCountView.widthAnchor.constraint(equalTo: buttonCountView.heightAnchor),
+            //    buttonCountView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: //defaultIndent),
+            //     buttonCountView.bottomAnchor.constraint(equalTo: playButtonTable.bottomAnchor, constant: -nearIndent),
+            //     buttonCountView.heightAnchor.constraint(equalToConstant: buttonHeight),
+            //    buttonCountView.widthAnchor.constraint(equalTo: buttonCountView.heightAnchor),
         ])
     }
 

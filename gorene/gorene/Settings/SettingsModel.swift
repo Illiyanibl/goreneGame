@@ -18,7 +18,7 @@ enum ColorTheme {
             colors.append(UIColor(hex: "222222")?.withAlphaComponent(0.9) ?? UIColor.black)
             colors.append(UIColor(hex: "111111")?.withAlphaComponent(0.9) ?? UIColor.systemGray)
             colors.append(.systemOrange)
-            colors.append(.systemYellow)
+            colors.append(.white)
         case .whiteText:
             colors.append(UIColor(hex: "222222")?.withAlphaComponent(0.9) ?? UIColor.black)
             colors.append(UIColor(hex: "111111")?.withAlphaComponent(0.9) ?? UIColor.systemGray)

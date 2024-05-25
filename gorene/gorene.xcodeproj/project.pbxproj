@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5100D06B2BF10D9100B64A5F /* QuestServiceExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5100D06A2BF10D9100B64A5F /* QuestServiceExtension.swift */; };
+		5100D06E2BFBA4BF00B64A5F /* DesiralizationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5100D06D2BFBA4BF00B64A5F /* DesiralizationService.swift */; };
 		511165372B669B9D00CAB252 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 511165362B669B9D00CAB252 /* AppDelegate.swift */; };
 		511165392B669B9D00CAB252 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 511165382B669B9D00CAB252 /* SceneDelegate.swift */; };
 		511165402B669B9D00CAB252 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5111653F2B669B9D00CAB252 /* Assets.xcassets */; };
@@ -22,6 +24,8 @@
 		512A62C62B6973A7005BD723 /* MainModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 512A62C52B6973A7005BD723 /* MainModel.swift */; };
 		512A62C82B697462005BD723 /* QuestModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 512A62C72B697462005BD723 /* QuestModel.swift */; };
 		512A62CA2B697504005BD723 /* QuestService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 512A62C92B697504005BD723 /* QuestService.swift */; };
+		519529682BDBB92300EAECEE /* QuestState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 519529672BDBB92300EAECEE /* QuestState.swift */; };
+		5195296A2BDFB1D400EAECEE /* MocQuest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 519529692BDFB1D400EAECEE /* MocQuest.swift */; };
 		51BC332E2B7156B300F5E032 /* SettingsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51BC332D2B7156B300F5E032 /* SettingsModel.swift */; };
 		51C80C912B6EE91800670F6E /* TableButtonViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51C80C902B6EE91800670F6E /* TableButtonViewCell.swift */; };
 		51C80C942B6EEA7E00670F6E /* MainPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51C80C932B6EEA7E00670F6E /* MainPresenter.swift */; };
@@ -46,6 +50,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		5100D06A2BF10D9100B64A5F /* QuestServiceExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestServiceExtension.swift; sourceTree = "<group>"; };
+		5100D06D2BFBA4BF00B64A5F /* DesiralizationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesiralizationService.swift; sourceTree = "<group>"; };
 		511165332B669B9D00CAB252 /* gorene.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = gorene.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		511165362B669B9D00CAB252 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		511165382B669B9D00CAB252 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -65,6 +71,8 @@
 		512A62C52B6973A7005BD723 /* MainModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainModel.swift; sourceTree = "<group>"; };
 		512A62C72B697462005BD723 /* QuestModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestModel.swift; sourceTree = "<group>"; };
 		512A62C92B697504005BD723 /* QuestService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestService.swift; sourceTree = "<group>"; };
+		519529672BDBB92300EAECEE /* QuestState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestState.swift; sourceTree = "<group>"; };
+		519529692BDFB1D400EAECEE /* MocQuest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MocQuest.swift; sourceTree = "<group>"; };
 		51BC332D2B7156B300F5E032 /* SettingsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsModel.swift; sourceTree = "<group>"; };
 		51C80C902B6EE91800670F6E /* TableButtonViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableButtonViewCell.swift; sourceTree = "<group>"; };
 		51C80C932B6EEA7E00670F6E /* MainPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainPresenter.swift; sourceTree = "<group>"; };
@@ -96,6 +104,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5100D06C2BFBA45200B64A5F /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				5100D06D2BFBA4BF00B64A5F /* DesiralizationService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
 		5111652A2B669B9C00CAB252 = {
 			isa = PBXGroup;
 			children = (
@@ -125,9 +141,11 @@
 				51C80C922B6EE98900670F6E /* Quest */,
 				5111656E2B66A6E700CAB252 /* NPC.swift */,
 				511165362B669B9D00CAB252 /* AppDelegate.swift */,
+				5100D06C2BFBA45200B64A5F /* Services */,
+				51BC332C2B71566800F5E032 /* Settings */,
 				511165692B669F1C00CAB252 /* CustomView */,
 				512A62C22B696673005BD723 /* Extension */,
-				51BC332C2B71566800F5E032 /* Settings */,
+				519AB46E2C012BDB00B855EC /* JSON */,
 				5111653F2B669B9D00CAB252 /* Assets.xcassets */,
 				511165412B669B9D00CAB252 /* LaunchScreen.storyboard */,
 				511165442B669B9D00CAB252 /* Info.plist */,
@@ -188,6 +206,13 @@
 			path = Extension;
 			sourceTree = "<group>";
 		};
+		519AB46E2C012BDB00B855EC /* JSON */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = JSON;
+			sourceTree = "<group>";
+		};
 		51BC332C2B71566800F5E032 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
@@ -201,6 +226,9 @@
 			children = (
 				512A62C72B697462005BD723 /* QuestModel.swift */,
 				512A62C92B697504005BD723 /* QuestService.swift */,
+				5100D06A2BF10D9100B64A5F /* QuestServiceExtension.swift */,
+				519529672BDBB92300EAECEE /* QuestState.swift */,
+				519529692BDFB1D400EAECEE /* MocQuest.swift */,
 			);
 			path = Quest;
 			sourceTree = "<group>";
@@ -335,8 +363,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				519529682BDBB92300EAECEE /* QuestState.swift in Sources */,
 				512A62C02B6962C8005BD723 /* MainView.swift in Sources */,
 				5111656F2B66A6E700CAB252 /* NPC.swift in Sources */,
+				5100D06E2BFBA4BF00B64A5F /* DesiralizationService.swift in Sources */,
 				512A62C82B697462005BD723 /* QuestModel.swift in Sources */,
 				512A62C62B6973A7005BD723 /* MainModel.swift in Sources */,
 				512A62CA2B697504005BD723 /* QuestService.swift in Sources */,
@@ -344,11 +374,13 @@
 				51C80C942B6EEA7E00670F6E /* MainPresenter.swift in Sources */,
 				511165372B669B9D00CAB252 /* AppDelegate.swift in Sources */,
 				51DFFF812B6EDF0400499FE9 /* MainViewExtension.swift in Sources */,
+				5195296A2BDFB1D400EAECEE /* MocQuest.swift in Sources */,
 				512A62C42B6966D9005BD723 /* UIKitExtension.swift in Sources */,
 				511165392B669B9D00CAB252 /* SceneDelegate.swift in Sources */,
 				5111656B2B669F6E00CAB252 /* CustomButton.swift in Sources */,
 				51BC332E2B7156B300F5E032 /* SettingsModel.swift in Sources */,
 				51C80C912B6EE91800670F6E /* TableButtonViewCell.swift in Sources */,
+				5100D06B2BF10D9100B64A5F /* QuestServiceExtension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
