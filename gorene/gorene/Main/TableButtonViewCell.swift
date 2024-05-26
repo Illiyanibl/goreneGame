@@ -43,6 +43,13 @@ final class TableButtonViewCell: UITableViewCell {
         return button
     }()
 
+    lazy var clearView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .clear
+        return view
+    }()
+
+
     @objc private func detailButtonClick(){
         DispatchQueue.global(qos: .utility).async {
             sleep(1)
@@ -87,7 +94,7 @@ final class TableButtonViewCell: UITableViewCell {
     
     func appleColorTheme(colors: [UIColor]){
         guard colors.count == 4 else { return }
-        contentView.backgroundColor = colors[1]
+        contentView.backgroundColor = .clear
         actionButton.tintColor = colors[2]
         actionButton.backgroundColor = colors[1]
         actionButton.setTitleColor(colors[2].withAlphaComponent(1), for: .normal)

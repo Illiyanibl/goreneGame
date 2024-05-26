@@ -26,6 +26,8 @@
 		512A62CA2B697504005BD723 /* QuestService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 512A62C92B697504005BD723 /* QuestService.swift */; };
 		519529682BDBB92300EAECEE /* QuestState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 519529672BDBB92300EAECEE /* QuestState.swift */; };
 		5195296A2BDFB1D400EAECEE /* MocQuest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 519529692BDFB1D400EAECEE /* MocQuest.swift */; };
+		519AB4742C0285BF00B855EC /* ruPrologue.json in Resources */ = {isa = PBXBuildFile; fileRef = 519AB4732C0285BF00B855EC /* ruPrologue.json */; };
+		519AB4762C03074900B855EC /* ImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 519AB4752C03074900B855EC /* ImageView.swift */; };
 		51BC332E2B7156B300F5E032 /* SettingsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51BC332D2B7156B300F5E032 /* SettingsModel.swift */; };
 		51C80C912B6EE91800670F6E /* TableButtonViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51C80C902B6EE91800670F6E /* TableButtonViewCell.swift */; };
 		51C80C942B6EEA7E00670F6E /* MainPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51C80C932B6EEA7E00670F6E /* MainPresenter.swift */; };
@@ -73,6 +75,8 @@
 		512A62C92B697504005BD723 /* QuestService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestService.swift; sourceTree = "<group>"; };
 		519529672BDBB92300EAECEE /* QuestState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestState.swift; sourceTree = "<group>"; };
 		519529692BDFB1D400EAECEE /* MocQuest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MocQuest.swift; sourceTree = "<group>"; };
+		519AB4732C0285BF00B855EC /* ruPrologue.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = ruPrologue.json; sourceTree = "<group>"; };
+		519AB4752C03074900B855EC /* ImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageView.swift; sourceTree = "<group>"; };
 		51BC332D2B7156B300F5E032 /* SettingsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsModel.swift; sourceTree = "<group>"; };
 		51C80C902B6EE91800670F6E /* TableButtonViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableButtonViewCell.swift; sourceTree = "<group>"; };
 		51C80C932B6EEA7E00670F6E /* MainPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainPresenter.swift; sourceTree = "<group>"; };
@@ -144,8 +148,8 @@
 				5100D06C2BFBA45200B64A5F /* Services */,
 				51BC332C2B71566800F5E032 /* Settings */,
 				511165692B669F1C00CAB252 /* CustomView */,
-				512A62C22B696673005BD723 /* Extension */,
 				519AB46E2C012BDB00B855EC /* JSON */,
+				512A62C22B696673005BD723 /* Extension */,
 				5111653F2B669B9D00CAB252 /* Assets.xcassets */,
 				511165412B669B9D00CAB252 /* LaunchScreen.storyboard */,
 				511165442B669B9D00CAB252 /* Info.plist */,
@@ -194,6 +198,7 @@
 				512A62C52B6973A7005BD723 /* MainModel.swift */,
 				51C80C932B6EEA7E00670F6E /* MainPresenter.swift */,
 				51C80C902B6EE91800670F6E /* TableButtonViewCell.swift */,
+				519AB4752C03074900B855EC /* ImageView.swift */,
 			);
 			path = Main;
 			sourceTree = "<group>";
@@ -209,8 +214,17 @@
 		519AB46E2C012BDB00B855EC /* JSON */ = {
 			isa = PBXGroup;
 			children = (
+				519AB4722C02859000B855EC /* ru */,
 			);
 			path = JSON;
+			sourceTree = "<group>";
+		};
+		519AB4722C02859000B855EC /* ru */ = {
+			isa = PBXGroup;
+			children = (
+				519AB4732C0285BF00B855EC /* ruPrologue.json */,
+			);
+			path = ru;
 			sourceTree = "<group>";
 		};
 		51BC332C2B71566800F5E032 /* Settings */ = {
@@ -338,6 +352,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				511165432B669B9D00CAB252 /* LaunchScreen.storyboard in Resources */,
+				519AB4742C0285BF00B855EC /* ruPrologue.json in Resources */,
 				511165402B669B9D00CAB252 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -364,6 +379,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				519529682BDBB92300EAECEE /* QuestState.swift in Sources */,
+				519AB4762C03074900B855EC /* ImageView.swift in Sources */,
 				512A62C02B6962C8005BD723 /* MainView.swift in Sources */,
 				5111656F2B66A6E700CAB252 /* NPC.swift in Sources */,
 				5100D06E2BFBA4BF00B64A5F /* DesiralizationService.swift in Sources */,

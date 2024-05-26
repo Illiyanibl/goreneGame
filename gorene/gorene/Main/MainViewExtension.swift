@@ -12,7 +12,6 @@ extension MainView: UITableViewDelegate, UITableViewDataSource {
         let section = actionButtons.count
         return section
     }
-
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier:
                                                     TableButtonViewCell.identifier, for: indexPath) as!  TableButtonViewCell
@@ -44,7 +43,7 @@ extension MainView: UITableViewDelegate, UITableViewDataSource {
         let safeArea = view.safeAreaLayoutGuide
         let defaultIndent: CGFloat = 12
         let nearIndent: CGFloat = 3
-        let topLineHeight: CGFloat = 80
+        let topLineHeight: CGFloat = 56
         let bottomLineHeight: CGFloat = 226
         let buttonHeight: CGFloat = 50
         NSLayoutConstraint.activate([

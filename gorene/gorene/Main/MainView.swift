@@ -23,7 +23,6 @@ final class MainView: UIViewController, MainViewProtocol {
     let mainFontParagraphStyle: NSMutableParagraphStyle = {
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineSpacing = 8
-        paragraphStyle.hyphenationFactor = 10
         paragraphStyle.paragraphSpacing = 8
         return paragraphStyle
     }()
@@ -95,7 +94,7 @@ final class MainView: UIViewController, MainViewProtocol {
 
     lazy var playerButton: UIButton = {
         let button: UIButton = CustomButton(title: "")
-        button.setBackgroundImage(UIImage(systemName: "person.crop.circle"), for: .normal)
+        button.setBackgroundImage(UIImage(systemName: "person.circle"), for: .normal)
         button.layer.masksToBounds = true
         button.layer.cornerRadius = 25
         button.layer.borderWidth = 2
@@ -110,7 +109,7 @@ final class MainView: UIViewController, MainViewProtocol {
                     SettingsModel.share.chooseColorTheme(colorTheme: .mainDarck)
                 }
             self?.getColorTheme() })
-        button.setBackgroundImage(UIImage(systemName: "circle.grid.3x3.circle.fill"), for: .normal)
+        button.setBackgroundImage(UIImage(systemName: "gearshape"), for: .normal)
         button.layer.masksToBounds = true
         button.layer.cornerRadius = 25
         return button
@@ -128,6 +127,7 @@ final class MainView: UIViewController, MainViewProtocol {
         button.layer.borderColor = UIColor.systemFill.cgColor
         return button
     }()
+
     lazy var loadButton: UIButton = {
         let button: UIButton = CustomButton(title: "", action: { [weak self] in
             self?.dismiss(animated: true)
@@ -140,11 +140,19 @@ final class MainView: UIViewController, MainViewProtocol {
         return button
     }()
 
+    lazy var clearView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .clear
+        return view
+    }()
+
     lazy var playButtonTable: UITableView = {
         let table = UITableView(frame: .zero, style: .plain)
         table.delegate = self
         table.dataSource = self
         table.backgroundColor = .clear
+        table.separatorColor = .clear
+        TableButtonViewCell.appearance().selectedBackgroundView = clearView
         table.register(TableButtonViewCell.self, forCellReuseIdentifier: TableButtonViewCell.identifier)
         table.rowHeight = 56
         table.showsVerticalScrollIndicator = false
@@ -219,6 +227,11 @@ final class MainView: UIViewController, MainViewProtocol {
 
     internal func getColorTheme(){
         appleColorTheme(colors: themeColor)
+    }
+
+    internal func pushImageView(image: String, duration: Int?, description: String?){
+
+
     }
 
     internal func pushBackgroundImage(_ image: String){
@@ -321,8 +334,9 @@ final class MainView: UIViewController, MainViewProtocol {
         locationLabel.textColor = colors[2].withAlphaComponent(1)
         statusLabel.textColor = colors[2]
         mainTextLabel.textColor = colors[3].withAlphaComponent(1)
-        settingsButton.backgroundColor = colors[2]
-        settingsButton.tintColor = colors[0].withAlphaComponent(1)
+        settingsButton.backgroundColor = .clear
+        //colors[0]
+        settingsButton.tintColor = colors[2].withAlphaComponent(1)
         playerButton.backgroundColor = colors[1]
         playerButton.tintColor = colors[2].withAlphaComponent(1)
         saveButton.backgroundColor = colors[1]

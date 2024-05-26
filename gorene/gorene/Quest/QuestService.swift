@@ -43,7 +43,6 @@ final class QuestService : QuestServiceProtocol {
         // return quests.lastIndex(where: { _ in return true})
     }
 
-
     func changeState(newState: Int){
         guard (currentQuest?.questStates.enumerated().first(where: { $0.offset == newState }) != nil) else { return }
         currentQuestState = newState
