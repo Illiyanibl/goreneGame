@@ -11,9 +11,9 @@ protocol MainViewProtocol: AnyObject {
     //MARK: func for MainPresenter
     func pushBackgroundImage(_ image: String)
     func pushStatusLabel(text: String)
-    func pushLocationText(text: String)
     func pushMainText(text: String)
-    func pushPlayButton(actionButtonTitle: [String], detailsButtonText: [String?])
+    func pushPlayButton(actionButtonTitle: [String], detailsButtonText: [String?], actionIsOn: [Bool])
+    
 }
 
 final class MainView: UIViewController, MainViewProtocol {
@@ -32,6 +32,7 @@ final class MainView: UIViewController, MainViewProtocol {
     private let titleFont = UIFont.italicSystemFont(ofSize: 20)
     var themeColor : [UIColor] { SettingsModel.share.colorTheme.getColor()}
     var actionButtons : [String] = []
+    var actionIsPossible : [Bool] = []
     var detailsButtons : [String?] = []
 
     lazy var touchDetailsViewClose = UITapGestureRecognizer(target: self, action: #selector(detailsViewClose))
@@ -231,7 +232,6 @@ final class MainView: UIViewController, MainViewProtocol {
 
     internal func pushImageView(image: String, duration: Int?, description: String?){
 
-
     }
 
     internal func pushBackgroundImage(_ image: String){
@@ -244,19 +244,15 @@ final class MainView: UIViewController, MainViewProtocol {
         let attrText = NSMutableAttributedString(string: text)
         attrText.addAttribute(.paragraphStyle, value:mainFontParagraphStyle, range:NSMakeRange(0, attrText.length))
         mainTextLabel.attributedText = attrText
-       // mainTextLabel.text = text
     }
 
-    internal func pushPlayButton(actionButtonTitle: [String], detailsButtonText: [String?]){
+    internal func pushPlayButton(actionButtonTitle: [String], detailsButtonText: [String?], actionIsOn: [Bool]){
         actionButtons = actionButtonTitle
         print(actionButtonTitle)
         detailsButtons = detailsButtonText
+        actionIsPossible = actionIsOn
         playButtonTable.reloadData()
 
-    }
-
-    internal func pushLocationText(text: String){
-        locationLabel.text = text
     }
 
     internal func pushStatusLabel(text: String){
@@ -264,10 +260,6 @@ final class MainView: UIViewController, MainViewProtocol {
     }
 
     internal func pushStats(stats: [String : Int]){
-    }
-
-    @objc func detailsViewClose(){
-                hideDetails()
     }
 
     internal func showDetails(details: String?, action: String){
@@ -282,6 +274,10 @@ final class MainView: UIViewController, MainViewProtocol {
         view.needsUpdateConstraints()
         view.layoutIfNeeded()
     }
+    @objc func detailsViewClose(){
+                hideDetails()
+    }
+
     private func hideDetails(){
         detailsTitleLabel.removeFromSuperview()
         detailsLabel.removeFromSuperview()

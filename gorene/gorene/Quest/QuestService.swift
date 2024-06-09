@@ -10,7 +10,7 @@ protocol QuestServiceProtocol: AnyObject{
     var currentQuestState: Int { get }
     var currentQuest: QuestModel? { get }
     var mainPresenter: MainPresenterProtocol? { get set }
-
+    var player: PlayerModelProtocol? { get set }
     func changeState(newState: Int)
     func changeQuest(newQuest: String, newState: Int)
 }

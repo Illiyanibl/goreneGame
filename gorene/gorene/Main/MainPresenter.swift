@@ -9,18 +9,21 @@ import Foundation
 protocol MainPresenterProtocol: AnyObject {
     func newState()
     func start()
-
     func actionPressed(action: Int)
-
 }
+
 final class MainPresenter: MainPresenterProtocol {
     weak var mainView : MainViewProtocol?
     let questService: QuestServiceProtocol
+    var player: PlayerModelProtocol
     init(mainView: MainViewProtocol? = nil) {
         self.mainView = mainView
         self.questService = QuestService()
+        self.player = PlayerModel(questService: questService, name: "Name")
+        questService.player = player
         questService.mainPresenter = self
     }
+
     func start(){
         newState()
     }
@@ -39,28 +42,47 @@ final class MainPresenter: MainPresenterProtocol {
         let actions = questService.currentQuest?.questStates[questService.currentQuestState].actions
         var actionTitle: [String] = []
         var actionDesctiption : [String?] = []
+        var actionIsOn : [Bool] = []
 
         //Массив действий(кнопок)
         actions?.forEach(){
-            let isPossible =  actionIsPossible(requiredParameters: $0.requiredParameters)
-            if !isPossible {}
-            else {
-                actionTitle.append($0.actionText)
-                actionDesctiption.append($0.actionDesctiption)
-            }
+
+            let isPossible =  actionIsPossible(
+                requiredParameters: $0.requiredParameters ?? [:],
+                sumOfParameters: $0.sumOfParameters ?? [:],
+                player: player
+            )
+            actionTitle.append($0.actionText)
+            actionDesctiption.append($0.actionDesctiption)
+            actionIsOn.append(isPossible)
         }
-        mainView?.pushPlayButton(actionButtonTitle: actionTitle, detailsButtonText: actionDesctiption)
+
+        mainView?.pushPlayButton(actionButtonTitle: actionTitle, detailsButtonText: actionDesctiption, actionIsOn: actionIsOn)
     }
 
-    func actionIsPossible(requiredParameters: [String : Int]?) -> Bool{
-        return true
+    func actionIsPossible(requiredParameters : [String : Int], sumOfParameters  : [String : Int], player: PlayerModelProtocol) -> Bool{
+        var possible = true
+        var sumPlayerStats = 0
+        var sumNeed = 0
+
+        requiredParameters.forEach() { parameter in
+            let playerValue = player.stats[parameter.key] ?? 100
+            parameter.value > playerValue ? possible = false : ()
+        }
+
+        sumOfParameters.forEach(){ parameter in
+            sumNeed += parameter.value
+            sumPlayerStats +=  player.stats[parameter.key] ?? 100
+        }
+        sumNeed > sumPlayerStats ? possible = false : ()
+        return possible
     }
 
-    func actionPressed(action: Int){
-        print("Pressed \(action)")
+    func actionPressed(action: Int){ // обработка нажатия вариантов
         let actionPressed = questService.currentQuest?.questStates[questService.currentQuestState].actions[action]
         let newState = actionPressed?.actionNextState
         let newCurrentQuestName = actionPressed?.actionNextQuest
+
         if newCurrentQuestName == nil {
             guard let newState else { return }
             questService.changeState(newState: newState)

@@ -14,6 +14,8 @@ final class TableButtonViewCell: UITableViewCell {
     let buttonFont = UIFont.italicSystemFont(ofSize: 16)
     let actionButtonAttributes: [NSAttributedString.Key : Any] = [
         NSAttributedString.Key.underlineStyle: 0]
+    let disabledActionButtonAttributes: [NSAttributedString.Key : Any] = [
+        NSAttributedString.Key.underlineStyle: 0, NSAttributedString.Key.strikethroughStyle: 1]
 
     lazy var actionButton: UIButton = {
         let button: UIButton = UIButton()
@@ -24,7 +26,7 @@ final class TableButtonViewCell: UITableViewCell {
         button.layer.cornerRadius = 12
         button.layer.borderWidth = 2
         button.layer.borderColor = UIColor.systemFill.cgColor
-        button.setBackgroundImage(UIImage(systemName: "line.diagonal"), for: .disabled)
+  //      button.setBackgroundImage(UIImage(systemName: "line.diagonal"), for: .disabled)
         button.addTarget(self, action: #selector(actionButtonClick), for: .touchUpInside)
         return button
     }()
@@ -84,12 +86,18 @@ final class TableButtonViewCell: UITableViewCell {
     }
 
     func setupCell(actionButtonTitle: String, isEnable: Bool, detailsIsOff: Bool = false){
-
-        let actionTitle = NSMutableAttributedString(string: actionButtonTitle, attributes: actionButtonAttributes)
-        actionButton.setAttributedTitle(NSAttributedString(attributedString: actionTitle), for: .normal)
+        var actionTitle: NSMutableAttributedString
         actionButton.isEnabled = isEnable
+        !isEnable ? (actionButton.alpha = 0.6) : (actionButton.alpha = 1)
+        if isEnable { 
+            actionButton.alpha = 1
+            actionTitle = NSMutableAttributedString(string: actionButtonTitle, attributes: actionButtonAttributes)
+        } else {
+            actionButton.alpha = 0.6
+            actionTitle = NSMutableAttributedString(string: actionButtonTitle, attributes: disabledActionButtonAttributes)
+        }
+        actionButton.setAttributedTitle(NSAttributedString(attributedString: actionTitle), for: .normal)
         detailsButton.isHidden = detailsIsOff
-        !isEnable ? actionButton.alpha = 0.2 : ()
     }
     
     func appleColorTheme(colors: [UIColor]){

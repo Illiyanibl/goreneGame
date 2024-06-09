@@ -15,7 +15,7 @@ extension MainView: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier:
                                                     TableButtonViewCell.identifier, for: indexPath) as!  TableButtonViewCell
-        cell.setupCell(actionButtonTitle: actionButtons[indexPath.row], isEnable: true, detailsIsOff: (detailsButtons[indexPath.row] == nil))
+        cell.setupCell(actionButtonTitle: actionButtons[indexPath.row], isEnable: actionIsPossible[indexPath.row], detailsIsOff: (detailsButtons[indexPath.row] == nil))
         cell.actionButtonAction = {[weak self] in
             guard let self else { return }
             self.mainPresenter.actionPressed(action: indexPath.row) }
