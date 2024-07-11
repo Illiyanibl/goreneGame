@@ -42,7 +42,9 @@ final class FirstView: UIViewController {
     private func startGame(){
         let mainPresenter  = MainPresenter()
         let mainView = MainView(mainPresenter: mainPresenter)
+        let modalMainView = ModalMainView()
         mainPresenter.mainView = mainView
+        mainPresenter.modalMainView = modalMainView
         self.navigationController?.pushViewController(mainView, animated: true)
 
     }

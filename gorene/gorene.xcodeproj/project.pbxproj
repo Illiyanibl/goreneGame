@@ -21,15 +21,15 @@
 		5111656F2B66A6E700CAB252 /* NPC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5111656E2B66A6E700CAB252 /* NPC.swift */; };
 		512A62C02B6962C8005BD723 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 512A62BF2B6962C8005BD723 /* MainView.swift */; };
 		512A62C42B6966D9005BD723 /* UIKitExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 512A62C32B6966D9005BD723 /* UIKitExtension.swift */; };
-		512A62C62B6973A7005BD723 /* MainModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 512A62C52B6973A7005BD723 /* MainModel.swift */; };
+		512A62C62B6973A7005BD723 /* PlayerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 512A62C52B6973A7005BD723 /* PlayerModel.swift */; };
 		512A62C82B697462005BD723 /* QuestModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 512A62C72B697462005BD723 /* QuestModel.swift */; };
 		512A62CA2B697504005BD723 /* QuestService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 512A62C92B697504005BD723 /* QuestService.swift */; };
 		51610AA72C10C4F200F46C53 /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51610AA62C10C4F200F46C53 /* Coordinator.swift */; };
-		51610AA92C159B1B00F46C53 /* test.xml in Resources */ = {isa = PBXBuildFile; fileRef = 51610AA82C159B1B00F46C53 /* test.xml */; };
+		51610AAB2C17681000F46C53 /* Fonts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51610AAA2C17681000F46C53 /* Fonts.swift */; };
 		519529682BDBB92300EAECEE /* QuestState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 519529672BDBB92300EAECEE /* QuestState.swift */; };
 		5195296A2BDFB1D400EAECEE /* MocQuest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 519529692BDFB1D400EAECEE /* MocQuest.swift */; };
 		519AB4742C0285BF00B855EC /* ruPrologue.json in Resources */ = {isa = PBXBuildFile; fileRef = 519AB4732C0285BF00B855EC /* ruPrologue.json */; };
-		519AB4762C03074900B855EC /* ImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 519AB4752C03074900B855EC /* ImageView.swift */; };
+		519AB4762C03074900B855EC /* ModalMainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 519AB4752C03074900B855EC /* ModalMainView.swift */; };
 		519AB5052C0F977600B855EC /* SignPainter.ttc in Resources */ = {isa = PBXBuildFile; fileRef = 519AB5042C0F977600B855EC /* SignPainter.ttc */; };
 		51BC332E2B7156B300F5E032 /* SettingsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51BC332D2B7156B300F5E032 /* SettingsModel.swift */; };
 		51C80C912B6EE91800670F6E /* TableButtonViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51C80C902B6EE91800670F6E /* TableButtonViewCell.swift */; };
@@ -73,15 +73,15 @@
 		5111656E2B66A6E700CAB252 /* NPC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NPC.swift; sourceTree = "<group>"; };
 		512A62BF2B6962C8005BD723 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		512A62C32B6966D9005BD723 /* UIKitExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIKitExtension.swift; sourceTree = "<group>"; };
-		512A62C52B6973A7005BD723 /* MainModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainModel.swift; sourceTree = "<group>"; };
+		512A62C52B6973A7005BD723 /* PlayerModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerModel.swift; sourceTree = "<group>"; };
 		512A62C72B697462005BD723 /* QuestModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestModel.swift; sourceTree = "<group>"; };
 		512A62C92B697504005BD723 /* QuestService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestService.swift; sourceTree = "<group>"; };
 		51610AA62C10C4F200F46C53 /* Coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
-		51610AA82C159B1B00F46C53 /* test.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = test.xml; sourceTree = "<group>"; };
+		51610AAA2C17681000F46C53 /* Fonts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fonts.swift; sourceTree = "<group>"; };
 		519529672BDBB92300EAECEE /* QuestState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestState.swift; sourceTree = "<group>"; };
 		519529692BDFB1D400EAECEE /* MocQuest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MocQuest.swift; sourceTree = "<group>"; };
 		519AB4732C0285BF00B855EC /* ruPrologue.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = ruPrologue.json; sourceTree = "<group>"; };
-		519AB4752C03074900B855EC /* ImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageView.swift; sourceTree = "<group>"; };
+		519AB4752C03074900B855EC /* ModalMainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalMainView.swift; sourceTree = "<group>"; };
 		519AB5042C0F977600B855EC /* SignPainter.ttc */ = {isa = PBXFileReference; lastKnownFileType = file; path = SignPainter.ttc; sourceTree = "<group>"; };
 		51BC332D2B7156B300F5E032 /* SettingsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsModel.swift; sourceTree = "<group>"; };
 		51C80C902B6EE91800670F6E /* TableButtonViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableButtonViewCell.swift; sourceTree = "<group>"; };
@@ -201,10 +201,10 @@
 			children = (
 				512A62BF2B6962C8005BD723 /* MainView.swift */,
 				51DFFF802B6EDF0400499FE9 /* MainViewExtension.swift */,
-				512A62C52B6973A7005BD723 /* MainModel.swift */,
+				512A62C52B6973A7005BD723 /* PlayerModel.swift */,
 				51C80C932B6EEA7E00670F6E /* MainPresenter.swift */,
 				51C80C902B6EE91800670F6E /* TableButtonViewCell.swift */,
-				519AB4752C03074900B855EC /* ImageView.swift */,
+				519AB4752C03074900B855EC /* ModalMainView.swift */,
 			);
 			path = Main;
 			sourceTree = "<group>";
@@ -239,7 +239,6 @@
 			isa = PBXGroup;
 			children = (
 				519AB4732C0285BF00B855EC /* ruPrologue.json */,
-				51610AA82C159B1B00F46C53 /* test.xml */,
 			);
 			path = ru;
 			sourceTree = "<group>";
@@ -256,6 +255,7 @@
 			isa = PBXGroup;
 			children = (
 				51BC332D2B7156B300F5E032 /* SettingsModel.swift */,
+				51610AAA2C17681000F46C53 /* Fonts.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -377,7 +377,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				519AB5052C0F977600B855EC /* SignPainter.ttc in Resources */,
-				51610AA92C159B1B00F46C53 /* test.xml in Resources */,
 				511165432B669B9D00CAB252 /* LaunchScreen.storyboard in Resources */,
 				519AB4742C0285BF00B855EC /* ruPrologue.json in Resources */,
 				511165402B669B9D00CAB252 /* Assets.xcassets in Resources */,
@@ -406,12 +405,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				519529682BDBB92300EAECEE /* QuestState.swift in Sources */,
-				519AB4762C03074900B855EC /* ImageView.swift in Sources */,
+				519AB4762C03074900B855EC /* ModalMainView.swift in Sources */,
 				512A62C02B6962C8005BD723 /* MainView.swift in Sources */,
 				5111656F2B66A6E700CAB252 /* NPC.swift in Sources */,
 				5100D06E2BFBA4BF00B64A5F /* DesiralizationService.swift in Sources */,
 				512A62C82B697462005BD723 /* QuestModel.swift in Sources */,
-				512A62C62B6973A7005BD723 /* MainModel.swift in Sources */,
+				512A62C62B6973A7005BD723 /* PlayerModel.swift in Sources */,
+				51610AAB2C17681000F46C53 /* Fonts.swift in Sources */,
 				512A62CA2B697504005BD723 /* QuestService.swift in Sources */,
 				511165672B669CCD00CAB252 /* FirstView.swift in Sources */,
 				51C80C942B6EEA7E00670F6E /* MainPresenter.swift in Sources */,
@@ -524,7 +524,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.7;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -581,7 +581,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.7;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
@@ -605,7 +605,7 @@
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.7;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -633,7 +633,7 @@
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.7;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

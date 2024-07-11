@@ -8,80 +8,115 @@
 import Foundation
 protocol MainPresenterProtocol: AnyObject {
     func newState()
-    func start()
+    func mainViewDidLoad()
     func actionPressed(action: Int)
 }
 
 final class MainPresenter: MainPresenterProtocol {
     weak var mainView : MainViewProtocol?
+    var modalMainView : ModalMainViewProtocol?
     let questService: QuestServiceProtocol
     var player: PlayerModelProtocol
     init(mainView: MainViewProtocol? = nil) {
         self.mainView = mainView
         self.questService = QuestService()
-        self.player = PlayerModel(questService: questService, name: "Name")
+        self.player = PlayerModel(name: "Name")
         questService.player = player
         questService.mainPresenter = self
+        start()
     }
 
     func start(){
+        questService.changeQuest(newQuest: "ruPrologue", newState: 0)
+    }
+
+    func mainViewDidLoad(){
         newState()
     }
 
     func newState(){
-        let background: String? = questService.currentQuest?.questStates[questService.currentQuestState].background
-        background != nil ? mainView?.pushBackgroundImage(background ?? "Nil") : ()
-
-        let statusText: String? = questService.currentQuest?.questStates[questService.currentQuestState].status
-        statusText != nil ? mainView?.pushStatusLabel(text: statusText ?? "Nil") : ()
-
-        let mainText: String = questService.currentQuest?.questStates[questService.currentQuestState].mainText ?? "Error"
-        mainView?.pushMainText(text: mainText)
-
-        //
-        let actions = questService.currentQuest?.questStates[questService.currentQuestState].actions
-        var actionTitle: [String] = []
-        var actionDesctiption : [String?] = []
-        var actionIsOn : [Bool] = []
-
-        //Массив действий(кнопок)
-        actions?.forEach(){
-
-            let isPossible =  actionIsPossible(
-                requiredParameters: $0.requiredParameters ?? [:],
-                sumOfParameters: $0.sumOfParameters ?? [:],
-                player: player
-            )
-            actionTitle.append($0.actionText)
-            actionDesctiption.append($0.actionDesctiption)
-            actionIsOn.append(isPossible)
-        }
-
-        mainView?.pushPlayButton(actionButtonTitle: actionTitle, detailsButtonText: actionDesctiption, actionIsOn: actionIsOn)
+        let state = questService.currentQuestState
+        let stateModal: QuestStateModal? = questService.currentQuest?.questStates[state].questStateModal
+        stateModal != nil ? showQuestStateModal(stateModal: stateModal) : ()
+        let background: String? = questService.currentQuest?.questStates[state].background
+        background != nil ? mainView?.pushBackgroundImage(background ?? "nil") : ()
+        let statusText: String? = questService.currentQuest?.questStates[state].status
+        statusText != nil ? mainView?.pushStatusLabel(text: statusText ?? "Error") : ()
+        pushMainText()
+        pushActions()
     }
 
-    func actionIsPossible(requiredParameters : [String : Int], sumOfParameters  : [String : Int], player: PlayerModelProtocol) -> Bool{
-        var possible = true
+    func pushMainText(){
+        var mainText: String
+        let state = questService.currentQuestState
+        let alternativeMainText = questService.currentQuest?.questStates[state].alternativeMainText
+        guard let alternativeMainText else {
+            mainText = questService.currentQuest?.questStates[state].mainText ?? "Error"
+            mainView?.pushMainText(text: mainText)
+            return
+        }
+
+    }
+
+    func pushActions(){
+        let state = questService.currentQuestState
+        let actions = questService.currentQuest?.questStates[state].actions
+        var actionTitle: [String] = []
+        var actionDescription : [String?] = []
+        var actionIsOn : [Bool] = []
+        actions?.forEach(){
+            var isPossible =  elementIsPossible(
+                requiredParameters: $0.requiredParameters ?? [:],
+                sumOfParameters: $0.sumOfParameters ?? [:],
+                player: player)
+            if let inverseRelation = $0.inverseRelation {
+                if inverseRelation < actionIsOn.count {
+                    actionIsOn[inverseRelation] ? isPossible = false : ()
+                }
+            }
+            actionTitle.append($0.actionText)
+            actionDescription.append($0.actionDescription)
+            actionIsOn.append(isPossible)
+        }
+        mainView?.pushActions(actionButtonTitle: actionTitle, detailsButtonText: actionDescription, actionIsOn: actionIsOn)
+    }
+
+    private func showQuestStateModal(stateModal: QuestStateModal?) {
+        guard let stateModal else { return }
+        modalMainView?.setupView(modalImage: stateModal.image, showingDuration: stateModal.duration, modalDescription: stateModal.description)
+        mainView?.showQuestStateModalView(view: modalMainView)
+    }
+
+    private func elementIsPossible(requiredParameters : [String : Int], sumOfParameters  : [String : Int] = [:], player: PlayerModelProtocol) -> Bool{
+        var isPossible = true
         var sumPlayerStats = 0
         var sumNeed = 0
 
         requiredParameters.forEach() { parameter in
-            let playerValue = player.stats[parameter.key] ?? 100
-            parameter.value > playerValue ? possible = false : ()
+            let playerValue = player.parameters[parameter.key]
+            playerValue == nil ? debugPrint("JSON error: \(parameter.key) not exists") : ()
+            parameter.key.contains("Base") ? debugPrint("JSON error: \(parameter.key) is Base parameter. It be able using only for changingParameters()") : ()
+            parameter.value > (playerValue  ?? 0) ? isPossible = false : ()
         }
-
         sumOfParameters.forEach(){ parameter in
             sumNeed += parameter.value
-            sumPlayerStats +=  player.stats[parameter.key] ?? 100
+            player.parameters[parameter.key] == nil ? debugPrint("JSON error: \(parameter.key) not exists") : ()
+            sumPlayerStats +=  player.parameters[parameter.key] ?? 0
         }
-        sumNeed > sumPlayerStats ? possible = false : ()
-        return possible
+        sumNeed > sumPlayerStats ? isPossible = false : ()
+        return isPossible
+    }
+
+    private func changeParameters(_ parameters: [String : Int]?){
+        guard let parameters else { return }
+        player.changeParameters(parameters)
     }
 
     func actionPressed(action: Int){ // обработка нажатия вариантов
         let actionPressed = questService.currentQuest?.questStates[questService.currentQuestState].actions[action]
         let newState = actionPressed?.actionNextState
         let newCurrentQuestName = actionPressed?.actionNextQuest
+        changeParameters(actionPressed?.changingParameters)
 
         if newCurrentQuestName == nil {
             guard let newState else { return }

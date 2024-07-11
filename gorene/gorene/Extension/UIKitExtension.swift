@@ -25,6 +25,12 @@ extension UITextField {
     }
 }
 
+extension UIButton.Configuration {
+  //  static func gray(){
+
+ //   }
+}
+
 extension UIColor {
     convenience init?(hex: String) {
         var hexSanitized = hex.trimmingCharacters(in: .whitespacesAndNewlines)

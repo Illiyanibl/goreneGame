@@ -27,8 +27,6 @@ extension QuestService {
     func servicesQuestInitial(){ //Добавляем служебные, пустые квесты. Позволяет выполнить некоторый код в нужный момент времени. Например переключить ветку изходя из ранее сделанного выбора
 
         addQuestFromData(data: getDataForJSON(jsonName: "ruPrologue"))
-        changeQuest(newQuest: "ruPrologue")
-
         addQuest(quest: QuestModel(questName: "QuestBranching01",
                                    questStart: { player, service in
         }))

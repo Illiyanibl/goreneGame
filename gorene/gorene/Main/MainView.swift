@@ -12,8 +12,8 @@ protocol MainViewProtocol: AnyObject {
     func pushBackgroundImage(_ image: String)
     func pushStatusLabel(text: String)
     func pushMainText(text: String)
-    func pushPlayButton(actionButtonTitle: [String], detailsButtonText: [String?], actionIsOn: [Bool])
-    
+    func pushActions(actionButtonTitle: [String], detailsButtonText: [String?], actionIsOn: [Bool])
+    func showQuestStateModalView(view:  ModalMainViewProtocol?) // убрать в координатор
 }
 
 final class MainView: UIViewController, MainViewProtocol {
@@ -28,7 +28,6 @@ final class MainView: UIViewController, MainViewProtocol {
     }()
 
     private let labelFont = UIFont.italicSystemFont(ofSize: 18)
-    private let mainFont = UIFont.italicSystemFont(ofSize: 18)
     private let titleFont = UIFont.italicSystemFont(ofSize: 20)
     var themeColor : [UIColor] { SettingsModel.share.colorTheme.getColor()}
     var actionButtons : [String] = []
@@ -49,7 +48,7 @@ final class MainView: UIViewController, MainViewProtocol {
         let label = UILabel()
         label.numberOfLines = 0
         label.lineBreakMode = .byWordWrapping
-        label.font = mainFont
+        label.font = UIFont.mainFont
         return label
     }()
 
@@ -69,17 +68,11 @@ final class MainView: UIViewController, MainViewProtocol {
         return view
     }()
 
-    lazy var locationLabel: UILabel = {
-        let label = UILabel()
-        label.numberOfLines = 1
-        label.font = labelFont
-        return label
-    }()
 
     lazy var statusLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 1
-        label.font = labelFont
+        label.font = UIFont.labelFont
         return label
     }()
 
@@ -155,7 +148,6 @@ final class MainView: UIViewController, MainViewProtocol {
         table.separatorColor = .clear
         TableButtonViewCell.appearance().selectedBackgroundView = clearView
         table.register(TableButtonViewCell.self, forCellReuseIdentifier: TableButtonViewCell.identifier)
-        table.rowHeight = 56
         table.showsVerticalScrollIndicator = false
         table.layer.cornerRadius = 12
         return table
@@ -181,7 +173,7 @@ final class MainView: UIViewController, MainViewProtocol {
     lazy var detailsLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 0
-        label.font = mainFont
+        label.font = UIFont.mainFont
         label.isHidden = true
         return label
     }()
@@ -198,7 +190,7 @@ final class MainView: UIViewController, MainViewProtocol {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.layer.contents = UIImage(named: "backgraund0")
+        mainPresenter.mainViewDidLoad()
         setupView()
     }
 
@@ -212,10 +204,7 @@ final class MainView: UIViewController, MainViewProtocol {
     }
 
     private func setupView(){
-        mainPresenter.start()
-        view.backgroundColor = .black
         appleColorTheme(colors: themeColor)
-
         setupSubView()
         view.addSubViews([mainTextView, informationView, playButtonTable, playerButton, saveButton, loadButton])
         setupConstraints()
@@ -223,15 +212,19 @@ final class MainView: UIViewController, MainViewProtocol {
 
     private func setupSubView(){
         mainTextView.addSubViews([mainTextLabel])
-        informationView.addSubViews([locationLabel, statusLabel, settingsButton])
+        informationView.addSubViews([statusLabel, settingsButton])
     }
 
     internal func getColorTheme(){
         appleColorTheme(colors: themeColor)
     }
 
-    internal func pushImageView(image: String, duration: Int?, description: String?){
-
+    //MARK: pushState
+    internal func showQuestStateModalView(view:  ModalMainViewProtocol?){ // убрать безобразие в координатор !!!!!
+        guard let view else { return }
+        let modalView = UIViewController() // больно смотреть
+        modalView.view = view as? UIView
+        self.navigationController?.present(modalView, animated: true)
     }
 
     internal func pushBackgroundImage(_ image: String){
@@ -246,9 +239,8 @@ final class MainView: UIViewController, MainViewProtocol {
         mainTextLabel.attributedText = attrText
     }
 
-    internal func pushPlayButton(actionButtonTitle: [String], detailsButtonText: [String?], actionIsOn: [Bool]){
+    internal func pushActions(actionButtonTitle: [String], detailsButtonText: [String?], actionIsOn: [Bool]){
         actionButtons = actionButtonTitle
-        print(actionButtonTitle)
         detailsButtons = detailsButtonText
         actionIsPossible = actionIsOn
         playButtonTable.reloadData()
@@ -261,6 +253,8 @@ final class MainView: UIViewController, MainViewProtocol {
 
     internal func pushStats(stats: [String : Int]){
     }
+
+    //MARK: pushState END
 
     internal func showDetails(details: String?, action: String){
         detailsTitleLabel.text = action
@@ -327,7 +321,6 @@ final class MainView: UIViewController, MainViewProtocol {
         guard colors.count == 4 else { return }
         mainTextView.backgroundColor = colors[0]
         informationView.backgroundColor = colors[1]
-        locationLabel.textColor = colors[2].withAlphaComponent(1)
         statusLabel.textColor = colors[2]
         mainTextLabel.textColor = colors[3].withAlphaComponent(1)
         settingsButton.backgroundColor = .clear

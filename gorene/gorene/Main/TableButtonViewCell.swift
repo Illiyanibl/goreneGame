@@ -5,35 +5,47 @@
 //  Created by Illya Blinov on 4.02.24.
 //
 import UIKit
-//
+enum TableButtonActions {
+    case primaryAction
+    case detailsAction
+}
+protocol TableButtonCellDelegate {
+    func cellActions(_ cellId: Int, action: TableButtonActions)
+}
 final class TableButtonViewCell: UITableViewCell {
-    typealias Action = (()-> Void)
-    var actionButtonAction: Action?
-    var detailsButtonAction: Action?
+    var cellConstraints: [NSLayoutConstraint]?
+    var cellId: Int?
+    var delegate: TableButtonCellDelegate?
+
     private var themeColor : [UIColor] { SettingsModel.share.colorTheme.getColor()}
     let buttonFont = UIFont.italicSystemFont(ofSize: 16)
-    let actionButtonAttributes: [NSAttributedString.Key : Any] = [
-        NSAttributedString.Key.underlineStyle: 0]
-    let disabledActionButtonAttributes: [NSAttributedString.Key : Any] = [
-        NSAttributedString.Key.underlineStyle: 0, NSAttributedString.Key.strikethroughStyle: 1]
+
+    lazy var actionButtonAttributes: [NSAttributedString.Key : Any] = [
+        NSAttributedString.Key.underlineStyle: 0, NSAttributedString.Key.font:  buttonFont]
+    lazy var disabledActionButtonAttributes: [NSAttributedString.Key : Any] = [
+        NSAttributedString.Key.underlineStyle: 0, NSAttributedString.Key.strikethroughStyle: 1,  NSAttributedString.Key.font:  buttonFont, NSAttributedString.Key.strokeColor: UIColor.red]
+
+    var buttonConfig: UIButton.Configuration = {
+        var config = UIButton.Configuration.filled()
+        return config
+    }()
+
+    lazy var buttonPrimaryAction = UIAction() { [weak self] action in
+        guard let self else { return }
+        guard let cellId else { return }
+        self.delegate?.cellActions(cellId, action: .primaryAction)}
 
     lazy var actionButton: UIButton = {
-        let button: UIButton = UIButton()
-        button.titleLabel?.font = buttonFont
+        let button = UIButton(configuration: buttonConfig, primaryAction: nil)
         button.titleLabel?.numberOfLines = 2
-        button.alpha = 1
         button.layer.masksToBounds = true
         button.layer.cornerRadius = 12
         button.layer.borderWidth = 2
         button.layer.borderColor = UIColor.systemFill.cgColor
-  //      button.setBackgroundImage(UIImage(systemName: "line.diagonal"), for: .disabled)
-        button.addTarget(self, action: #selector(actionButtonClick), for: .touchUpInside)
+        button.translatesAutoresizingMaskIntoConstraints = false
         return button
-    }()
 
-    @objc private func actionButtonClick(){
-        actionButtonAction?()
-    }
+    }()
 
     lazy var detailsButton: UIButton = {
         let button: UIButton = UIButton()
@@ -41,6 +53,7 @@ final class TableButtonViewCell: UITableViewCell {
         button.layer.masksToBounds = true
         button.layer.cornerRadius = 25
         button.setBackgroundImage(UIImage(systemName: "questionmark.circle"), for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(detailButtonClick), for: .touchUpInside)
         return button
     }()
@@ -51,16 +64,18 @@ final class TableButtonViewCell: UITableViewCell {
         return view
     }()
 
-
     @objc private func detailButtonClick(){
         DispatchQueue.global(qos: .utility).async {
             sleep(1)
             DispatchQueue.main.async { [weak self] in
                 self?.detailsButton.alpha = 1
+                self?.detailsButton.isEnabled = true
             }
         }
         detailsButton.alpha = 0.5
-        detailsButtonAction?()
+        detailsButton.isEnabled = false
+        guard let cellId else { return }
+        delegate?.cellActions(cellId, action: .detailsAction)
     }
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -85,46 +100,61 @@ final class TableButtonViewCell: UITableViewCell {
         contentView.addSubViews([detailsButton, actionButton])
     }
 
-    func setupCell(actionButtonTitle: String, isEnable: Bool, detailsIsOff: Bool = false){
-        var actionTitle: NSMutableAttributedString
-        actionButton.isEnabled = isEnable
-        !isEnable ? (actionButton.alpha = 0.6) : (actionButton.alpha = 1)
-        if isEnable { 
+    override func prepareForReuse() {
+        super.prepareForReuse()
+       // activateConstraints(activate: false)
+        actionButton.removeAction(buttonPrimaryAction, for: .touchUpInside)
+        cellId = nil
+    }
+
+    func setupCell(actionButtonTitle: String, isActive: Bool, detailsIsOff: Bool = false, row: Int){
+        cellId = row
+        if isActive {
+            let actionTitle = NSMutableAttributedString(string: actionButtonTitle, attributes: actionButtonAttributes)
+            actionButton.addAction(buttonPrimaryAction, for: .touchUpInside)
+            actionButton.setAttributedTitle(NSAttributedString(attributedString: actionTitle), for: .normal)
             actionButton.alpha = 1
-            actionTitle = NSMutableAttributedString(string: actionButtonTitle, attributes: actionButtonAttributes)
         } else {
-            actionButton.alpha = 0.6
-            actionTitle = NSMutableAttributedString(string: actionButtonTitle, attributes: disabledActionButtonAttributes)
+            let actionTitle = NSMutableAttributedString(string: actionButtonTitle, attributes: disabledActionButtonAttributes)
+            actionButton.setAttributedTitle(NSAttributedString(attributedString: actionTitle), for: .normal)
+            actionButton.alpha = 0.7
         }
-        actionButton.setAttributedTitle(NSAttributedString(attributedString: actionTitle), for: .normal)
         detailsButton.isHidden = detailsIsOff
     }
     
     func appleColorTheme(colors: [UIColor]){
         guard colors.count == 4 else { return }
-        contentView.backgroundColor = .clear
-        actionButton.tintColor = colors[2]
-        actionButton.backgroundColor = colors[1]
-        actionButton.setTitleColor(colors[2].withAlphaComponent(1), for: .normal)
+     //   guard let cellIsActive else { return }
+     //   guard cellIsActive else { return }
+        buttonConfig.baseBackgroundColor = colors[1]
+        buttonConfig.baseForegroundColor = colors[2]
         detailsButton.tintColor = colors[2]
         detailsButton.backgroundColor = colors[1]
         detailsButton.setTitleColor(colors[2].withAlphaComponent(1), for: .normal)
+        updateButtonColors()
+    }
+
+    func updateButtonColors(){
+        actionButton.configuration = buttonConfig
     }
 
     private func setupConstraints(){
         let nearIndent: CGFloat = 3
-        NSLayoutConstraint.activate([
+        cellConstraints = ([
             detailsButton.topAnchor.constraint(equalTo: contentView.topAnchor, constant: nearIndent),
-            detailsButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: nearIndent),
-            detailsButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -nearIndent),
+            detailsButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            detailsButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
             detailsButton.widthAnchor.constraint(equalTo: detailsButton.heightAnchor),
-
             actionButton.topAnchor.constraint(equalTo: detailsButton.topAnchor),
             actionButton.bottomAnchor.constraint(equalTo: detailsButton.bottomAnchor),
             actionButton.leadingAnchor.constraint(equalTo: detailsButton.trailingAnchor, constant: 12),
-            actionButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -nearIndent),
-
+            actionButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             ])
+        activateConstraints(activate: true)
+    }
+
+    private func activateConstraints(activate: Bool){
+        activate ? NSLayoutConstraint.activate(cellConstraints ?? []) : NSLayoutConstraint.deactivate(cellConstraints ?? [])
     }
 }
 

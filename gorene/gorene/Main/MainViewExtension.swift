@@ -6,23 +6,32 @@
 //
 
 import UIKit
-extension MainView: UITableViewDelegate, UITableViewDataSource {
+extension MainView: UITableViewDelegate, UITableViewDataSource, TableButtonCellDelegate {
+
+    func cellActions(_ cellId: Int, action: TableButtonActions) {
+        switch action {
+        case .primaryAction:
+            mainPresenter.actionPressed(action: cellId)
+        case .detailsAction:
+            showDetails(details: detailsButtons[cellId] , action: actionButtons[cellId])
+        }
+    }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         let section = actionButtons.count
         return section
     }
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+       // if actionIsPossible[indexPath.row] { return 56 }
+        return 56
+    }
+
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier:
                                                     TableButtonViewCell.identifier, for: indexPath) as!  TableButtonViewCell
-        cell.setupCell(actionButtonTitle: actionButtons[indexPath.row], isEnable: actionIsPossible[indexPath.row], detailsIsOff: (detailsButtons[indexPath.row] == nil))
-        cell.actionButtonAction = {[weak self] in
-            guard let self else { return }
-            self.mainPresenter.actionPressed(action: indexPath.row) }
-        cell.detailsButtonAction = { [weak self] in
-            guard let self else { return }
-            self.showDetails(details: self.detailsButtons[indexPath.row] , action: self.actionButtons[indexPath.row])
-        }
+        cell.delegate = self
+        cell.setupCell(actionButtonTitle: actionButtons[indexPath.row], isActive: actionIsPossible[indexPath.row], detailsIsOff: (detailsButtons[indexPath.row] == nil), row: indexPath.row)
         cell.appleColorTheme(colors: themeColor)
         return cell
     }
@@ -53,11 +62,8 @@ extension MainView: UITableViewDelegate, UITableViewDataSource {
             informationView.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: defaultIndent),
             informationView.heightAnchor.constraint(equalToConstant: topLineHeight),
 
-            locationLabel.leadingAnchor.constraint(equalTo: informationView.leadingAnchor, constant: defaultIndent),
-            locationLabel.topAnchor.constraint(equalTo: informationView.topAnchor, constant: defaultIndent / 2),
-
             statusLabel.leadingAnchor.constraint(equalTo: informationView.leadingAnchor, constant: defaultIndent),
-            statusLabel.topAnchor.constraint(equalTo: locationLabel.bottomAnchor, constant: defaultIndent / 2),
+            statusLabel.topAnchor.constraint(equalTo: informationView.topAnchor, constant: defaultIndent / 2),
 
             settingsButton.topAnchor.constraint(equalTo: informationView.topAnchor, constant: nearIndent),
             settingsButton.trailingAnchor.constraint(equalTo: informationView.trailingAnchor, constant: -nearIndent),
