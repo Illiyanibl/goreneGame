@@ -9,7 +9,7 @@ import Foundation
 
 extension QuestService {
 
-    func getDataForJSON(jsonName: String) -> Data {
+    func getDataFromJSON(jsonName: String) -> Data {
         let url = Bundle.main.url(forResource: jsonName, withExtension: "json")
         guard let url else { return Data() }
         guard let data = try? Data(contentsOf: url) else { return Data() }
@@ -18,21 +18,18 @@ extension QuestService {
 
     func addQuestFromData(data: Data) {
         let questCollection = DesiralizationService.questStateDecode(data: data)
-        if let questCollection {
-            let quest = QuestModel(questName: questCollection.questName, questStates: questCollection.questStates)
+        guard let questCollection else { return }
+        let quest = QuestModel(questName: questCollection.questName, questStates: questCollection.questStates)
             addQuest(quest: quest)
-        }
     }
 
-    func servicesQuestInitial(){ //Добавляем служебные, пустые квесты. Позволяет выполнить некоторый код в нужный момент времени. Например переключить ветку изходя из ранее сделанного выбора
-
-        addQuestFromData(data: getDataForJSON(jsonName: "ruPrologue"))
-        addQuest(quest: QuestModel(questName: "QuestBranching01",
-                                   questStart: { player, service in
-        }))
-        addQuest(quest: QuestModel(questName: "QuestBranching02",
-                                   questStart: { player, service in
-        }))
+    func servicesQuestInitial(){
+        addQuestFromData(data: getDataFromJSON(jsonName: "ruPrologue"))
+        addQuestFromData(data: getDataFromJSON(jsonName: "ruFreeBrothersSCamp1"))
+        addQuestFromData(data: getDataFromJSON(jsonName: "ruFreeBrothersSCamp2"))
+       // addQuest(quest: QuestModel(questName: "QuestBranching01",
+       //                            questStart: { player, service in
+       // }))
 
     }
 

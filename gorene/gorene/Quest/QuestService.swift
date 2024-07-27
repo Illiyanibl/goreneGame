@@ -52,7 +52,7 @@ final class QuestService : QuestServiceProtocol {
         let foundQuest: QuestModel? = quests.first(where: {$0.questName == newQuest})
         guard let foundQuest else { return }
         currentQuest = foundQuest
-        currentQuestState = newState
         if player != nil { foundQuest.start(player: &player!, questService: self)}
+        changeState(newState: newState)
     }
 }

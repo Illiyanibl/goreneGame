@@ -27,7 +27,7 @@ final class MainPresenter: MainPresenterProtocol {
     }
 
     func start(){
-        questService.changeQuest(newQuest: "ruPrologue", newState: 0)
+        questService.changeQuest(newQuest: "ruFreeBrothersSCamp1", newState: 0)
     }
 
     func mainViewDidLoad(){
@@ -78,7 +78,7 @@ final class MainPresenter: MainPresenterProtocol {
             actionDescription.append($0.actionDescription)
             actionIsOn.append(isPossible)
         }
-        mainView?.pushActions(actionButtonTitle: actionTitle, detailsButtonText: actionDescription, actionIsOn: actionIsOn)
+        mainView?.pushActions(actionTitle: actionTitle, actionDetailsText: actionDescription, actionIsOn: actionIsOn)
     }
 
     private func showQuestStateModal(stateModal: QuestStateModal?) {

@@ -12,7 +12,7 @@ protocol MainViewProtocol: AnyObject {
     func pushBackgroundImage(_ image: String)
     func pushStatusLabel(text: String)
     func pushMainText(text: String)
-    func pushActions(actionButtonTitle: [String], detailsButtonText: [String?], actionIsOn: [Bool])
+    func pushActions(actionTitle: [String], actionDetailsText: [String?], actionIsOn: [Bool])
     func showQuestStateModalView(view:  ModalMainViewProtocol?) // убрать в координатор
 }
 
@@ -122,6 +122,14 @@ final class MainView: UIViewController, MainViewProtocol {
         return button
     }()
 
+    let longActionListImage: UIImage = UIImage(systemName: "arrow.up.and.down") ?? UIImage()
+    lazy var longListActionView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .clear
+        view.isHidden = true
+        return view
+    }()
+
     lazy var loadButton: UIButton = {
         let button: UIButton = CustomButton(title: "", action: { [weak self] in
             self?.dismiss(animated: true)
@@ -206,7 +214,7 @@ final class MainView: UIViewController, MainViewProtocol {
     private func setupView(){
         appleColorTheme(colors: themeColor)
         setupSubView()
-        view.addSubViews([mainTextView, informationView, playButtonTable, playerButton, saveButton, loadButton])
+        view.addSubViews([mainTextView, informationView, playButtonTable, playerButton, saveButton, loadButton, longListActionView])
         setupConstraints()
     }
 
@@ -239,13 +247,17 @@ final class MainView: UIViewController, MainViewProtocol {
         mainTextLabel.attributedText = attrText
     }
 
-    internal func pushActions(actionButtonTitle: [String], detailsButtonText: [String?], actionIsOn: [Bool]){
-        actionButtons = actionButtonTitle
-        detailsButtons = detailsButtonText
+    internal func pushActions(actionTitle: [String], actionDetailsText: [String?], actionIsOn: [Bool]){
+        actionButtons = actionTitle
+        detailsButtons = actionDetailsText
         actionIsPossible = actionIsOn
         playButtonTable.reloadData()
-
+        if actionTitle.count > 4 { animateShowLongListAction()}
     }
+
+  //  private func actionIsLongList(){
+  //      animateShowLongListAction()
+  //  }
 
     internal func pushStatusLabel(text: String){
         statusLabel.text = text
@@ -280,6 +292,22 @@ final class MainView: UIViewController, MainViewProtocol {
         view.needsUpdateConstraints()
         view.layoutIfNeeded()
     }
+
+    private func animateShowLongListAction(){
+        let animator = UIViewPropertyAnimator(duration: 0.2, curve: .linear){ [weak self] in
+            guard let self else { return }
+            self.longListActionView.alpha = 1
+        }
+        let finichAnimator = UIViewPropertyAnimator(duration: 0.0, curve: .linear){ [weak self] in
+            guard let self else { return }
+            self.longListActionView.alpha = 0
+        }
+        animator.addCompletion {_ in
+            finichAnimator.startAnimation(afterDelay: 1.0)
+        }
+        animator.startAnimation(afterDelay: 0.0)
+    }
+
 
     private func animateShowDetails(){
         let animator = UIViewPropertyAnimator(duration: 0.3, curve: .linear){ [weak self] in
@@ -335,6 +363,7 @@ final class MainView: UIViewController, MainViewProtocol {
         detailsView.backgroundColor = colors[0]
         detailsTitleLabel.textColor = colors[2].withAlphaComponent(1)
         detailsLabel.textColor = colors[3].withAlphaComponent(1)
+        longListActionView.layer.contents = longActionListImage.withTintColor(.red).cgImage
         playButtonTable.reloadData()
     }
 }

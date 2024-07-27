@@ -86,6 +86,12 @@ extension MainView: UITableViewDelegate, UITableViewDataSource, TableButtonCellD
             playButtonTable.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -defaultIndent),
             playButtonTable.heightAnchor.constraint(equalToConstant: bottomLineHeight),
 
+            longListActionView.widthAnchor.constraint(equalToConstant: buttonHeight / 2),
+            longListActionView.heightAnchor.constraint(equalToConstant: 2 * buttonHeight),
+            longListActionView.trailingAnchor.constraint(equalTo: playButtonTable.trailingAnchor),
+            longListActionView.centerYAnchor.constraint(equalTo: playButtonTable.centerYAnchor),
+         //   longListActionView.centerXAnchor.constraint(equalTo: playButtonTable.centerXAnchor),
+
             playerButton.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: defaultIndent),
             playerButton.topAnchor.constraint(equalTo: playButtonTable.topAnchor, constant: nearIndent),
             playerButton.heightAnchor.constraint(equalToConstant: buttonHeight),
