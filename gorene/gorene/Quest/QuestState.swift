@@ -4,6 +4,12 @@
 //
 //  Created by Illya Blinov on 26.04.24.
 //
+protocol AlternativeElementProtocol {
+    var requiredParameters : [String : Int]? { get set }
+    var exactParameters : [String : Int]? { get set }
+    var sumOfParameters  : [String : Int]? { get set }
+}
+
 struct QuestStateCollection: Decodable, Encodable {
     let questName: String
     let questStates: [QuestState]
@@ -18,10 +24,11 @@ struct QuestState: Decodable, Encodable {
     var actions: [ActionStruct]
 }
 
-struct ActionStruct: Decodable, Encodable {
+struct ActionStruct: Decodable, Encodable, AlternativeElementProtocol {
     var actionText: String // текст для каждой кнопки
     var actionDescription: String? // описание действия для каждой кнопки// какие статы потребуюся для данной развилки
-    var requiredParameters : [String : Int]? // обязательные параметры успешно если этот же параметр у игрока равен или больше (логическое И)
+    var requiredParameters : [String : Int]? // не обязательные параметры успешно если этот же параметр у игрока равен или больше (логическое И)
+    var exactParameters : [String : Int]? // параметр точного значения. Успешно когда этот же параметр у игрока равен. Для satate и навигвции
     var sumOfParameters  : [String : Int]? // сумма выбранных параметров, успешно если сумма этих же параметров у игрока равна либо больше
     var changingParameters: [String : Int]? // изменение параметра игрока по ключу
     var typeOfGame: String? // тип игры, имя игры в наборе игр
@@ -30,9 +37,11 @@ struct ActionStruct: Decodable, Encodable {
     var actionNextQuest: String?
 }
 
-struct AlternativeMainText: Decodable, Encodable { //
+struct AlternativeMainText: Decodable, Encodable, AlternativeElementProtocol { //
     var mainText: String // альтернативный основной текст
-    var requiredParameters : [String : Int] // обязательные параметры/условия // обязательный парметр
+    var requiredParameters : [String : Int]? //условия //не обязательный парметр
+    var exactParameters : [String : Int]? // параметр точного значения. Успешно когда этот же параметр у игрока равен. Для satate и навигвции
+    var sumOfParameters  : [String : Int]? // сумма выбранных параметров, успешно если сумма этих же параметров у игрока равна либо больше
     var priority: Int? // преоритет при прохождение нескольких условий// вероятно НЕ реализованно!
 }
 

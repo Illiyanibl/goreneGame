@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import OSLog
 protocol PlayerModelProtocol: AnyObject {
     var parameters: [String : Int] { get }
     func changeParameters(_ parameters: [String : Int])
@@ -13,17 +14,19 @@ protocol PlayerModelProtocol: AnyObject {
 final class PlayerModel: PlayerModelProtocol {
     var name: String = ""
     private (set) var parameters: [String : Int] = [:]
+    private (set) var jsonVariables: [String : Any] = [:]
     //var currentMainQuest: QuestModel? { questService.currentQuest }
     //vat currentQuestState: Int {}
     //var currentQuest: [QuestModel] = []
     private var parametersMax:[String : Int] = [:]
-
-    var faith: Int { 10 }
-    var oratory: Int { 10 }
-    var contemplation: Int { 10 }
-    var discipline: Int { 10 }
+    //все вычесляемые параметры
+    var discipline: Int { (parameters["disciplineBase"] ?? 0) + 2 }
+    var contemplation: Int { (parameters["contemplationBase"] ?? 0) + 2 }
+    var faith: Int { (parameters["faithBase"] ?? 0) + 2 }
+    var oratory:  Int { (parameters["oratoryBase"] ?? 0) * 2 }
     var creative: Int { 10 }
     var technology: Int { 10 }
+
     //
     init(name: String) {
         self.name = name
@@ -33,57 +36,86 @@ final class PlayerModel: PlayerModelProtocol {
     }
 
     private func updateСalculatedParameters(){
-        parameters.updateValue(faith, forKey: "faith")
-        parameters.updateValue(oratory, forKey: "oratory")
+        //обноаление вычесляемых параметров в словаре parameters
         parameters.updateValue(contemplation, forKey: "contemplation")
         parameters.updateValue(discipline, forKey: "discipline")
+        parameters.updateValue(oratory, forKey: "oratory")
+        parameters.updateValue(faith, forKey: "faith")
         parameters.updateValue(creative, forKey: "creative")
-        parameters.updateValue(technology, forKey: "technology")
+        parameters.updateValue(technology, forKey: "tyranny")
+        parameters.updateValue(technology, forKey: "intrigues")
     }
     private func setParametersLimit(){
         parametersMax.updateValue(20, forKey: "energy")
     }
 
     private func lazyParametersInitial(key: String) {
-        debugPrint("Lazy init for \(key)")
+        Logger.playerService.info("Lazy init for \(key)")
         switch key {
-        case  "faithBase":
-            let valueFaithBase = (parameters["contemplation"] ?? 0) / 4 +  (parameters["discipline"] ?? 0) / 2
-            parameters.updateValue(valueFaithBase, forKey: "faithBase") // init faithBase
+        case "disciplineBase":
+            parameters.updateValue(5, forKey: "disciplineBase")
+        case "contemplationBase":
+            parameters.updateValue(5, forKey: "contemplationBase")
         case "oratoryBase":
-            let valueOratoryBase = (parameters["strength"] ?? 0) / 4 +  (parameters["flexibility"] ?? 0) / 2
+            let valueOratoryBase: Int = ((parameters["strength"] ?? 0)  +  (parameters["flexibility"] ?? 0)) * 15 / 10
             parameters.updateValue(valueOratoryBase, forKey: "oratoryBase")  // init oratoryBase
+        case  "faithBase":
+            let valueFaithBase = (parameters["flexibility"] ?? 0 + (parameters["strength"] ?? 0) / 2 )
+            parameters.updateValue(valueFaithBase, forKey: "faithBase") // init faithBase
         case "technologyBase":
-            parameters.updateValue(10, forKey: "technologyBase")
+            parameters.updateValue(5, forKey: "technologyBase")
         case "creativeBase":
-            parameters.updateValue(10, forKey: "creativeBase")
+            parameters.updateValue(5, forKey: "creativeBase")
+        case "tyrannyBase":
+            parameters.updateValue(5, forKey: "tyrannyBase")
+        case "intriguesBase":
+            parameters.updateValue(5, forKey: "intriguesBase")
+
         default: break
         }
     }
 
     private func parametersInit() -> [String : Int]  {
         var parameters : [String : Int] = [:]
-        parameters.updateValue(4, forKey: "strength")
-        parameters.updateValue(8, forKey: "flexibility")
-        parameters.updateValue(8, forKey: "disciplineBase")
-        parameters.updateValue(10, forKey: "contemplationBase")
+        //не вычесляемые
         parameters.updateValue(20, forKey: "energy")
         parameters.updateValue(5, forKey: "coins")
+        parameters.updateValue(5, forKey: "strength")
+        parameters.updateValue(5, forKey: "flexibility")
+        // базовые компоненты вычесляемых переменных инициализируются лениво
+        /*
+        parameters.updateValue(5, forKey: "disciplineBase")
+        parameters.updateValue(5, forKey: "contemplationBase")
+        parameters.updateValue(5, forKey: "oratoryBase")
+        parameters.updateValue(5, forKey: "faithBase")
+        parameters.updateValue(5, forKey: "creativeBase")
+        parameters.updateValue(5, forKey: "technologyBase")
+        parameters.updateValue(5, forKey: "tyrannyBase")
+        parameters.updateValue(5, forKey: "intriguesBase")
+         */
+        // отношения
         parameters.updateValue(4, forKey: "relFather")
         parameters.updateValue(4, forKey: "relMother")
         parameters.updateValue(4, forKey: "relSheima")
         parameters.updateValue(4, forKey: "relVecente")
         parameters.updateValue(4, forKey: "relTelec")
         parameters.updateValue(4, forKey: "relAgiat")
+        parameters.updateValue(4, forKey: "relFinito")
+        parameters.updateValue(4, forKey: "relDion")
+        parameters.updateValue(4, forKey: "relGeom")
+        parameters.updateValue(4, forKey: "relTelec")
+        parameters.updateValue(4, forKey: "relNemira")
+        parameters.updateValue(4, forKey: "relNabis")
+        parameters.updateValue(4, forKey: "relPriam")
+        parameters.updateValue(4, forKey: "relDilof")
+        parameters.updateValue(4, forKey: "relNeidg")
         return parameters
     }
 
     func changeParameters(_ changingParameters: [String : Int]){
         changingParameters.forEach(){ changingParameter in
-            // Если передаем 0 происходит инициализация параметра // для всех ленивых параметров необходимо передавать 0 в "changingParameters" перед их использованием
-            changingParameter.value == 0 ? lazyParametersInitial(key: changingParameter.key) : ()
-            //parameters[changingParameter.key] == nil ? lazyParametersInitial(key: changingParameter.key) : () // страхуем если забыли
-            //
+            parameters[changingParameter.key] == nil ? lazyParametersInitial(key: changingParameter.key) : ()
+            // ленивая инициализация
             let parameterValue = parameters[changingParameter.key]
             let maxValue: Int = parametersMax[changingParameter.key] ?? 10
             if parameterValue != nil {
@@ -94,9 +126,9 @@ final class PlayerModel: PlayerModelProtocol {
             } else {
                 if changingParameter.key.first == "*" {
                     parameters.updateValue(changingParameter.value, forKey: changingParameter.key)
-                    debugPrint("Attention: Added  *parametr \(changingParameter.key)")
+                    Logger.playerService.info("Attention: Added  *parametr \(changingParameter.key)")
                 } else {
-                    debugPrint("JSON error: \(changingParameter.key) is not possible to change a non-existent parameter if it is not $parameters ")
+                    Logger.playerService.error("JSON error: \(changingParameter.key) is not possible to change a non-existent parameter if it is not *parameters ")
                 }
             }
         }

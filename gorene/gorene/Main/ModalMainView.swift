@@ -6,15 +6,15 @@
 //
 
 import UIKit
-
-protocol ModalMainViewProtocol: AnyObject {
+protocol ShowModalViewProtocol: AnyObject {}
+protocol MainModalViewProtocol: AnyObject, ShowModalViewProtocol {
    func setupView(modalImage: String?, showingDuration: Int?, modalDescription: String?)
 }
 protocol ModalMainViewDelegateProtocol {
     func closeModalView(view: UIView)
 }
 
-final class ModalMainView: UIView, ModalMainViewProtocol {
+final class ModalMainView: UIView, MainModalViewProtocol {
     var modalImage: String?
     var showingDuration: Int?
     var modalDescription: String?

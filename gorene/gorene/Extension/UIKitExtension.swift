@@ -5,6 +5,15 @@
 //  Created by Illya Blinov on 30.01.24.
 //
 import UIKit
+
+import OSLog
+
+extension Logger {
+    private static var subsystem = Bundle.main.bundleIdentifier ?? "goreneGame"
+    static let questService = Logger(subsystem: subsystem, category: "questService")
+    static let playerService = Logger(subsystem: subsystem, category: "playerService")
+}
+
 extension UIView{
 
     static var identifier: String {

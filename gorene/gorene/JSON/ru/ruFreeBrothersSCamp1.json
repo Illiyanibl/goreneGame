@@ -1,5 +1,5 @@
 {
-  "questName": "ruFreeBrothersSCamp1",
+  "questName": "ruFreebrothersSCamp1",
   "questStates": [
     {
       "stateId": 0,
@@ -857,7 +857,7 @@
           }
         },
         {
-          "actionText": "Потратить монеты",
+          "actionText": "Пара монет напомнит Приаму о бюрократии Единства",
           "actionNextState": 47,
           "requiredParameters": {
             "coins": 2

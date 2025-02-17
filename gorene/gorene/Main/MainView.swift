@@ -5,15 +5,14 @@
 //  Created by Illya Blinov on 30.01.24.
 //
 import UIKit
-
 protocol MainViewProtocol: AnyObject {
-    func getColorTheme()
+    func getColorTheme() //внешняя ручка
     //MARK: func for MainPresenter
     func pushBackgroundImage(_ image: String)
     func pushStatusLabel(text: String)
     func pushMainText(text: String)
     func pushActions(actionTitle: [String], actionDetailsText: [String?], actionIsOn: [Bool])
-    func showQuestStateModalView(view:  ModalMainViewProtocol?) // убрать в координатор
+    func showModalView(view:  ShowModalViewProtocol?) // убрать в координатор
 }
 
 final class MainView: UIViewController, MainViewProtocol {
@@ -195,7 +194,6 @@ final class MainView: UIViewController, MainViewProtocol {
         fatalError("init(coder:) has not been implemented")
     }
 
-
     override func viewDidLoad() {
         super.viewDidLoad()
         mainPresenter.mainViewDidLoad()
@@ -228,9 +226,9 @@ final class MainView: UIViewController, MainViewProtocol {
     }
 
     //MARK: pushState
-    internal func showQuestStateModalView(view:  ModalMainViewProtocol?){ // убрать безобразие в координатор !!!!!
+    internal func showModalView(view:  ShowModalViewProtocol?){ // убрать в координатор !!!!!
         guard let view else { return }
-        let modalView = UIViewController() // больно смотреть
+        let modalView = UIViewController() // 
         modalView.view = view as? UIView
         self.navigationController?.present(modalView, animated: true)
     }
