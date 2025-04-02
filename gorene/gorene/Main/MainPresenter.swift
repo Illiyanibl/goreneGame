@@ -8,9 +8,20 @@
 import Foundation
 import OSLog
 protocol MainPresenterProtocol: AnyObject {
-    func newState()
+    //for main View
     func mainViewDidLoad()
     func actionPressed(action: Int)
+    //for QuestService
+    func newState()
+    //for game's presenters
+    func gameResult(_ result: GameResult)
+    //Player
+    func getVariables(_ key: String) -> (Int?, String?)
+}
+
+enum GameResult {
+case win
+case lose
 }
 
 final class MainPresenter: MainPresenterProtocol {
@@ -19,36 +30,25 @@ final class MainPresenter: MainPresenterProtocol {
     var modalGameView : GameMemoriesViewProtocol?
     let questService: QuestServiceProtocol
     var player: PlayerModelProtocol
+    private var gamesWinParameters: [String : Int] = [:]
+    private var gamesLoseParameters: [String : Int] = [:]
+
     init(mainView: MainViewProtocol? = nil) {
         self.mainView = mainView
         self.questService = QuestService()
-        self.player = PlayerModel(name: "Name")
+        self.player = PlayerModel(name: "Player")
         questService.player = player
         questService.mainPresenter = self
         start()
     }
 
-    func start(){
+//MARK: private function
+
+    private func start(){
         questService.changeQuest(newQuest: "ruPrologue", newState: 0)
     }
 
-    func mainViewDidLoad(){
-        newState()
-    }
-
-    func newState(){
-        let state = questService.currentQuestState
-        let stateModal: QuestStateModal? = questService.currentQuest?.questStates[state].questStateModal
-        stateModal != nil ? showQuestStateModal(stateModal: stateModal) : ()
-        let background: String? = questService.currentQuest?.questStates[state].background
-        background != nil ? mainView?.pushBackgroundImage(background ?? "nil") : ()
-        let statusText: String? = questService.currentQuest?.questStates[state].status
-        statusText != nil ? mainView?.pushStatusLabel(text: statusText ?? "Error") : ()
-        pushMainText()
-        pushActions()
-    }
-
-    func pushMainText(){
+    private func pushMainText(){
       //  var mainText: String
       //  let state = questService.currentQuestState
       //  let alternativeMainText = questService.currentQuest?.questStates[state].alternativeMainText
@@ -60,11 +60,9 @@ final class MainPresenter: MainPresenterProtocol {
       //  }
         let mainText: String = questService.findMainText()
         mainView?.pushMainText(text: mainText)
-
-
     }
 
-    func pushActions(){
+   private func pushActions(){
         let state = questService.currentQuestState
         let actions = questService.currentQuest?.questStates[state].actions
         var actionTitle: [String] = []
@@ -90,11 +88,57 @@ final class MainPresenter: MainPresenterProtocol {
         mainView?.showModalView(view: modalMainView)
     }
 
-
-
     private func changeParameters(_ parameters: [String : Int]?){
         guard let parameters else { return }
-        player.changeParameters(parameters)
+        player.changeVariables(parameters)
+    }
+
+    private func checkTypeOfGame(action: ActionStruct?) {
+        let typeOfGame = questService.checkTypeOfGame(action: action)
+        let gamesParameters = questService.checkGamesParameters(action: action, win: ["coins" : 2, "gameLavel": 1], lose: ["coins" : -1, "gameLavel": -2])
+        gamesWinParameters = gamesParameters.0 //win
+        gamesLoseParameters = gamesParameters.1 //lose
+        switch typeOfGame {
+        case .nogame:
+            break
+        case .memories:
+            createMemoriesGame()
+        }
+    }
+    
+    private func createMemoriesGame(){
+        let memoriesGamePresenter: GameMemoriesPresenterProtocol = GameMemoriesPresenter(mainPresenter: self)
+        showModalGameView(view: GameMemoriesModalView(gameMemoriesPresenter: memoriesGamePresenter))
+    }
+
+
+    private func showModalGameView(view: GameMemoriesViewProtocol) {
+        self.modalGameView = view
+        mainView?.showModalView(view: modalGameView)
+    }
+
+    //MARK: MainPresenterProtocol function
+    func mainViewDidLoad(){
+        newState()
+    }
+
+    func getVariables(_ key: String) -> (Int?, String?) {
+        player.getVariables(key)
+    }
+
+    func gameResult(_ result: GameResult) {
+        switch result {
+        case .lose:
+            changeParameters(gamesLoseParameters)
+            gamesLoseParameters = [:]
+            gamesWinParameters = [:]
+            return
+        case .win:
+            changeParameters(gamesWinParameters)
+            gamesLoseParameters = [:]
+            gamesWinParameters = [:]
+            return
+        }
     }
 
     func actionPressed(action: Int){ // обработка нажатия вариантов
@@ -102,7 +146,6 @@ final class MainPresenter: MainPresenterProtocol {
         let newState = actionPressed?.actionNextState
         let newCurrentQuestName = actionPressed?.actionNextQuest
         changeParameters(actionPressed?.changingParameters)
-
         if newCurrentQuestName == nil {
             guard let newState else { return }
             questService.changeState(newState: newState)
@@ -113,21 +156,18 @@ final class MainPresenter: MainPresenterProtocol {
         checkTypeOfGame(action: actionPressed)
     }
 
-    func checkTypeOfGame(action: ActionStruct?) {
-        let typeOfGame = questService.checkTypeOfGame(action: action)
-        switch typeOfGame {
-        case .nogame:
-            break
-        case .memories:
-            showModalGameView(view: GameMemoriesModalView())
-        }
-
+    func newState(){ // обработка нового состояния
+        let state = questService.currentQuestState
+        let stateModal: QuestStateModal? = questService.currentQuest?.questStates[state].questStateModal
+        stateModal != nil ? showQuestStateModal(stateModal: stateModal) : ()
+        let background: String? = questService.currentQuest?.questStates[state].background
+        background != nil ? mainView?.pushBackgroundImage(background ?? "nil") : ()
+        let statusText: String? = questService.currentQuest?.questStates[state].status
+        statusText != nil ? mainView?.pushStatusLabel(text: statusText ?? "Error") : ()
+        pushMainText()
+        pushActions()
     }
 
-    private func showModalGameView(view: GameMemoriesViewProtocol) {
-        self.modalGameView = view
-        mainView?.showModalView(view: modalGameView)
-    }
 
 
 }

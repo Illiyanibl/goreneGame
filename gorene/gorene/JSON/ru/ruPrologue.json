@@ -174,7 +174,6 @@
         {
           "actionNextState": 6,
           "actionText": "Мини игра",
-          "typeOfGame": "memories",
           "changingParameters": {
             "flexibility": -2,
             "oratoryBase": -2,

@@ -32,6 +32,8 @@ struct ActionStruct: Decodable, Encodable, AlternativeElementProtocol {
     var sumOfParameters  : [String : Int]? // сумма выбранных параметров, успешно если сумма этих же параметров у игрока равна либо больше
     var changingParameters: [String : Int]? // изменение параметра игрока по ключу
     var typeOfGame: String? // тип игры, имя игры в наборе игр
+    var gamesWinParameters: [String : Int]?
+    var gamesLoseParameters: [String : Int]?
     var inverseRelation: Int? // эксперементальная фича!! обратная зависимость кнопки, идея показывать кнопку только если кнопка на которую ссылаемся недоступна
     var actionNextState: Int //новое состояние при нажатие кнопки // следующий экран
     var actionNextQuest: String?

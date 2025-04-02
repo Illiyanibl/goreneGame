@@ -13,6 +13,7 @@ protocol QuestServiceProtocol: AnyObject{
     var mainPresenter: MainPresenterProtocol? { get set }
     var player: PlayerModelProtocol? { get set }
     func checkTypeOfGame(action: ActionStruct?) -> TypeOfGame
+    func checkGamesParameters(action: ActionStruct?, win defaultWinParameters: [String : Int], lose defaultLoseParameters: [String : Int]) -> ([String : Int], [String : Int])
     func elementIsPossible(element: AlternativeElementProtocol) -> Bool
     func findMainText() -> String
     func changeState(newState: Int)
@@ -21,6 +22,8 @@ protocol QuestServiceProtocol: AnyObject{
 protocol QuestServiceEdditProtocol: AnyObject {
     func addQuest(quest: QuestModel)
 }
+
+
 
 enum TypeOfGame {
     case memories
@@ -61,6 +64,12 @@ final class QuestService : QuestServiceProtocol {
         }
     }
 
+    func checkGamesParameters(action: ActionStruct?, win defaultWinParameters: [String : Int], lose defaultLoseParameters: [String : Int]) -> ([String : Int], [String : Int]){
+        guard let gamesWinParameters = action?.gamesWinParameters else { return (defaultWinParameters, defaultLoseParameters)}
+        let gamesLoseParameters = action?.gamesLoseParameters ?? gamesWinParameters.mapValues { -$0 }
+        return (gamesWinParameters, gamesLoseParameters)
+    }
+
     func elementIsPossible(element: AlternativeElementProtocol) -> Bool{
         guard let player else { return false}
         var isPossible = true
@@ -72,14 +81,14 @@ final class QuestService : QuestServiceProtocol {
         let sumOfParameters = element.sumOfParameters ?? [:]
 
         requiredParameters.forEach() { parameter in
-            let playerValue = player.parameters[parameter.key]
+            let playerValue = player.variables[parameter.key]
             playerValue == nil ? Logger.questService.error("JSON error: \(parameter.key) not exists") : ()
             parameter.key.contains("Base") ? Logger.questService.error("JSON error: \(parameter.key) is Base parameter. It be able using only for changingParameters()") : ()
             parameter.value > (playerValue  ?? 0) ? isPossible = false : ()
         }
 
         exactParameters.forEach() { parameter in
-            let playerValue = player.parameters[parameter.key]
+            let playerValue = player.variables[parameter.key]
             playerValue == nil ? Logger.questService.error("JSON error: \(parameter.key) not exists") : ()
             parameter.key.contains("Base") ? Logger.questService.error("JSON error: \(parameter.key) is Base parameter. It be able using only for changingParameters()") : ()
             parameter.value != (playerValue ?? 0) ?  isPossible = false : ()
@@ -87,8 +96,8 @@ final class QuestService : QuestServiceProtocol {
 
         sumOfParameters.forEach(){ parameter in
             sumNeed += parameter.value
-            player.parameters[parameter.key] == nil ? Logger.questService.error("JSON error: \(parameter.key) not exists") : ()
-            sumPlayerStats +=  player.parameters[parameter.key] ?? 0
+            player.variables[parameter.key] == nil ? Logger.questService.error("JSON error: \(parameter.key) not exists") : ()
+            sumPlayerStats +=  player.variables[parameter.key] ?? 0
         }
         sumNeed > sumPlayerStats ? isPossible = false : ()
         return isPossible

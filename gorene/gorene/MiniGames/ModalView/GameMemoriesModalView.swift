@@ -4,14 +4,24 @@
 //
 //  Created by Illya Blinov on 24.11.24.
 //
-
 import UIKit
 protocol GameMemoriesViewProtocol : AnyObject, ShowModalViewProtocol {
     func pushInstructionText(text: String)
+    func playSequence(sequence : [Int])
+    func playSequence(sequence : [Int], delay: Double)
+    func setCellsInteraction(state: TapState)
+
 }
+enum TapState {
+    case block
+    case unblock
+}
+
 final class GameMemoriesModalView: UIView, GameMemoriesViewProtocol {
     var themeColor : [UIColor] { SettingsModel.share.colorTheme.getColor()}
-    var gameMemoriesPresenter: GameMemoriesPresenterProtocol?
+    var gameMemoriesPresenter: GameMemoriesPresenterProtocol
+
+    let cellCounter = 0
 
     let mainFontParagraphStyle: NSMutableParagraphStyle = {
         let paragraphStyle = NSMutableParagraphStyle()
@@ -41,6 +51,15 @@ final class GameMemoriesModalView: UIView, GameMemoriesViewProtocol {
         return label
     }()
 
+    lazy var startButton: UIButton = {
+        let button: UIButton = CustomButton(title: "Start Game", action: { [weak self] in
+            self?.startGame()})
+        button.layer.cornerRadius = 25
+        button.layer.borderWidth = 2
+        button.layer.borderColor = UIColor.systemFill.cgColor
+        return button
+    }()
+
     lazy var playZoneView: UIView = {
         let view = UIView()
         view.layer.cornerRadius = 12
@@ -61,27 +80,34 @@ final class GameMemoriesModalView: UIView, GameMemoriesViewProtocol {
     }()
 
 
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        gameMemoriesPresenter = GameMemoriesPresenter(gameMemoriesModalView: self)
+    init(gameMemoriesPresenter: GameMemoriesPresenterProtocol) {
+        self.gameMemoriesPresenter = gameMemoriesPresenter
+        super.init(frame: .zero)
+        self.gameMemoriesPresenter.gameMemoriesModalView = self
         setupUI()
         setupGesture()
         setupConstraints()
-    }
+        }
+
+    override init(frame: CGRect) {
+            fatalError("init(frame:) has not been implemented")
+        }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
+        }
+
     func setupUI(){
+        setCellsInteraction(state: .block)
         appleColorTheme(colors: themeColor)
         titleLabel.text = "Memories"
         self.addSubViews([gameView])
         setupSubView()
-        gameMemoriesPresenter?.startGame()
     }
+
     private func setupSubView (){
         playZoneView.addSubViews([gameCollectionView])
-        gameView.addSubViews([titleLabel, instructionLabel, playZoneView])
+        gameView.addSubViews([titleLabel, instructionLabel, startButton,  playZoneView])
     }
 
     internal func pushInstructionText(text: String) {
@@ -89,18 +115,54 @@ final class GameMemoriesModalView: UIView, GameMemoriesViewProtocol {
         attrText.addAttribute(.paragraphStyle, value:mainFontParagraphStyle, range:NSMakeRange(0, attrText.length))
         instructionLabel.attributedText = attrText
     }
-    func setupGesture(){}
-
-
+    func setupGesture(){
+    }
 
     private func appleColorTheme(colors: [UIColor]){
         guard colors.count == 4 else { return }
         self.backgroundColor = colors[0]
         titleLabel.textColor = colors[2].withAlphaComponent(1)
+        startButton.backgroundColor = colors[1]
+        startButton.tintColor = colors[2].withAlphaComponent(1)
         gameView.backgroundColor = colors[0]
         playZoneView.backgroundColor = colors[0]
        // modalDescriptionLabel.textColor = colors[3].withAlphaComponent(1)
       //  modalLabelview.backgroundColor = colors[0].withAlphaComponent(0.8)
+    }
+
+    func startGame(){
+        setCellsInteraction(state: .block)
+        gameMemoriesPresenter.startGame()
+    }
+
+    func playSequence(sequence : [Int]){
+        playSequence(sequence: sequence, delay: 2.0)
+    }
+
+    func playSequence(sequence: [Int], delay: Double) {
+        for (index, element) in sequence.enumerated() {
+            DispatchQueue.main.asyncAfter(deadline: .now() + (delay * Double(index))) {
+                let sequenceCell = self.gameCollectionView.cellForItem(at: IndexPath(row: element - 1, section: 0)) as? GameMemoriesCellView
+                sequenceCell?.cellPush(.red)
+            }
+        }
+        let totalDelay = delay * Double(sequence.count)
+            DispatchQueue.main.asyncAfter(deadline: .now() + totalDelay) {
+                self.setCellsInteraction(state: .unblock)
+            }
+    }
+
+    func setCellsInteraction(state: TapState) {
+        switch state {
+        case .block:
+            gameCollectionView.isUserInteractionEnabled = false
+        case .unblock:
+            gameCollectionView.isUserInteractionEnabled = true
+        }
+    }
+
+    private func getUpdateForCollection(){
+        gameCollectionView.reloadData()
     }
     func setupConstraints(){
         let safeArea = self.safeAreaLayoutGuide
@@ -123,7 +185,16 @@ final class GameMemoriesModalView: UIView, GameMemoriesViewProtocol {
             instructionLabel.trailingAnchor.constraint(equalTo:  gameView.trailingAnchor, constant: -defaultIndent),
             instructionLabel.heightAnchor.constraint(equalToConstant: 60),
 
-            playZoneView.topAnchor.constraint(equalTo: instructionLabel.bottomAnchor, constant: defaultIndent),
+
+
+
+            startButton.centerXAnchor.constraint(equalTo: playZoneView.centerXAnchor),
+            startButton.bottomAnchor.constraint(equalTo: playZoneView.topAnchor, constant: -defaultIndent),
+            startButton.widthAnchor.constraint(equalToConstant: 100),
+            startButton.heightAnchor.constraint(equalToConstant: 60),
+
+           // playZoneView.topAnchor.constraint(equalTo: instructionLabel.bottomAnchor, constant: defaultIndent),
+            playZoneView.heightAnchor.constraint(equalTo: gameView.widthAnchor, constant: -defaultIndent * 2),
             playZoneView.leadingAnchor.constraint(equalTo: gameView.leadingAnchor, constant: defaultIndent),
             playZoneView.trailingAnchor.constraint(equalTo: gameView.trailingAnchor, constant: -defaultIndent),
             playZoneView.bottomAnchor.constraint(equalTo: gameView.bottomAnchor, constant: -defaultIndent),
@@ -166,8 +237,12 @@ extension GameMemoriesModalView: UICollectionViewDataSource {
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        //GameMemoriesCellView
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: GameMemoriesCellView.identifier, for: indexPath) as! GameMemoriesCellView
         return cell
+    }
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let cell = collectionView.cellForItem(at: indexPath) as! GameMemoriesCellView
+        cell.cellPush(.green)
+        gameMemoriesPresenter.play(newElement: indexPath.item + 1)
     }
 }

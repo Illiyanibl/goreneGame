@@ -7,19 +7,18 @@
 
 import UIKit
 final class GameMemoriesCellView: UICollectionViewCell{
+    let cellColor: UIColor = .gray
     let cellView: UIView = {
         let cellView = UIView()
         cellView.translatesAutoresizingMaskIntoConstraints = false
         cellView.contentMode = .scaleAspectFill
         cellView.layer.masksToBounds = true
-        cellView.backgroundColor = .yellow
         return cellView
     }()
 
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
-
     }
     
     required init?(coder: NSCoder) {
@@ -27,10 +26,27 @@ final class GameMemoriesCellView: UICollectionViewCell{
     }
     
     private func setupUI(){
+        cellView.backgroundColor = cellColor
         contentView.addSubViews([cellView])
         setupConstraints()
     }
 
+    func cellPush(_ color: UIColor){
+        pushAnimation(color)
+    }
+
+    func pushAnimation(_ color: UIColor){
+        let animator = UIViewPropertyAnimator(duration: 0.25, curve: .linear) {
+            self.cellView.backgroundColor = color}
+        let comeBackAnomator = UIViewPropertyAnimator(duration: 0.25, curve: .linear){
+            self.cellView.backgroundColor = self.cellColor
+        }
+        animator.addCompletion {_ in
+            comeBackAnomator.startAnimation(afterDelay: 1.5)
+        }
+        animator.startAnimation(afterDelay: 0.0)
+    }
+    
     private func setupConstraints(){
         NSLayoutConstraint.activate([
             cellView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),

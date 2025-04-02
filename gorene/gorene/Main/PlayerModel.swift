@@ -8,68 +8,74 @@
 import Foundation
 import OSLog
 protocol PlayerModelProtocol: AnyObject {
-    var parameters: [String : Int] { get }
-    func changeParameters(_ parameters: [String : Int])
+    var variables: [String : Int] { get }
+    var jsonVariables: [String : String] { get }
+    func changeVariables(_ parameters: [String : Int])
+    func getVariables(_ key: String) -> (Int?, String?)
 }
 final class PlayerModel: PlayerModelProtocol {
     var name: String = ""
-    private (set) var parameters: [String : Int] = [:]
-    private (set) var jsonVariables: [String : Any] = [:]
+    private (set) var variables: [String : Int] = [:]
+    private (set) var jsonVariables: [String : String] = [:]
+
     //var currentMainQuest: QuestModel? { questService.currentQuest }
     //vat currentQuestState: Int {}
     //var currentQuest: [QuestModel] = []
     private var parametersMax:[String : Int] = [:]
     //все вычесляемые параметры
-    var discipline: Int { (parameters["disciplineBase"] ?? 0) + 2 }
-    var contemplation: Int { (parameters["contemplationBase"] ?? 0) + 2 }
-    var faith: Int { (parameters["faithBase"] ?? 0) + 2 }
-    var oratory:  Int { (parameters["oratoryBase"] ?? 0) * 2 }
+    var discipline: Int { (variables["disciplineBase"] ?? 0) + 2 }
+    var contemplation: Int { (variables["contemplationBase"] ?? 0) + 2 }
+    var faith: Int { (variables["faithBase"] ?? 0) + 2 }
+    var oratory:  Int { (variables["oratoryBase"] ?? 0) * 2 }
     var creative: Int { 10 }
     var technology: Int { 10 }
 
     //
     init(name: String) {
         self.name = name
-        self.parameters = parametersInit()
+        self.variables = parametersInit()
         setParametersLimit()
         updateСalculatedParameters()
     }
 
     private func updateСalculatedParameters(){
         //обноаление вычесляемых параметров в словаре parameters
-        parameters.updateValue(contemplation, forKey: "contemplation")
-        parameters.updateValue(discipline, forKey: "discipline")
-        parameters.updateValue(oratory, forKey: "oratory")
-        parameters.updateValue(faith, forKey: "faith")
-        parameters.updateValue(creative, forKey: "creative")
-        parameters.updateValue(technology, forKey: "tyranny")
-        parameters.updateValue(technology, forKey: "intrigues")
+        variables.updateValue(contemplation, forKey: "contemplation")
+        variables.updateValue(discipline, forKey: "discipline")
+        variables.updateValue(oratory, forKey: "oratory")
+        variables.updateValue(faith, forKey: "faith")
+        variables.updateValue(creative, forKey: "creative")
+        variables.updateValue(technology, forKey: "tyranny")
+        variables.updateValue(technology, forKey: "intrigues")
     }
     private func setParametersLimit(){
         parametersMax.updateValue(20, forKey: "energy")
+        parametersMax.updateValue(12, forKey: "gameLavel")
+        parametersMax.updateValue(99, forKey: "coins")
+
     }
 
     private func lazyParametersInitial(key: String) {
         Logger.playerService.info("Lazy init for \(key)")
         switch key {
         case "disciplineBase":
-            parameters.updateValue(5, forKey: "disciplineBase")
+            variables.updateValue(5, forKey: "disciplineBase")
         case "contemplationBase":
-            parameters.updateValue(5, forKey: "contemplationBase")
+            variables.updateValue(5, forKey: "contemplationBase")
         case "oratoryBase":
-            let valueOratoryBase: Int = ((parameters["strength"] ?? 0)  +  (parameters["flexibility"] ?? 0)) * 15 / 10
-            parameters.updateValue(valueOratoryBase, forKey: "oratoryBase")  // init oratoryBase
+            let valueOratoryBase: Int = ((variables["strength"] ?? 0)  +  (variables["flexibility"] ?? 0)) * 15 / 10
+            variables.updateValue(valueOratoryBase, forKey: "oratoryBase")  // init oratoryBase
         case  "faithBase":
-            let valueFaithBase = (parameters["flexibility"] ?? 0 + (parameters["strength"] ?? 0) / 2 )
-            parameters.updateValue(valueFaithBase, forKey: "faithBase") // init faithBase
+            let valueFaithBase = (variables["flexibility"] ?? 0 + (variables["strength"] ?? 0) / 2 )
+            variables.updateValue(valueFaithBase, forKey: "faithBase") // init faithBase
         case "technologyBase":
-            parameters.updateValue(5, forKey: "technologyBase")
+            variables.updateValue(5, forKey: "technologyBase")
         case "creativeBase":
-            parameters.updateValue(5, forKey: "creativeBase")
+            variables.updateValue(5, forKey: "creativeBase")
         case "tyrannyBase":
-            parameters.updateValue(5, forKey: "tyrannyBase")
+            variables.updateValue(5, forKey: "tyrannyBase")
         case "intriguesBase":
-            parameters.updateValue(5, forKey: "intriguesBase")
+            variables.updateValue(5, forKey: "intriguesBase")
 
         default: break
         }
@@ -78,6 +84,7 @@ final class PlayerModel: PlayerModelProtocol {
     private func parametersInit() -> [String : Int]  {
         var parameters : [String : Int] = [:]
         //не вычесляемые
+        parameters.updateValue(4, forKey: "gameLavel")
         parameters.updateValue(20, forKey: "energy")
         parameters.updateValue(5, forKey: "coins")
         parameters.updateValue(5, forKey: "strength")
@@ -112,20 +119,20 @@ final class PlayerModel: PlayerModelProtocol {
         return parameters
     }
 
-    func changeParameters(_ changingParameters: [String : Int]){
+    func changeVariables(_ changingParameters: [String : Int]){
         changingParameters.forEach(){ changingParameter in
-            parameters[changingParameter.key] == nil ? lazyParametersInitial(key: changingParameter.key) : ()
+            variables[changingParameter.key] == nil ? lazyParametersInitial(key: changingParameter.key) : ()
             // ленивая инициализация
-            let parameterValue = parameters[changingParameter.key]
+            let parameterValue = variables[changingParameter.key]
             let maxValue: Int = parametersMax[changingParameter.key] ?? 10
             if parameterValue != nil {
                 var newValue: Int = (parameterValue ?? 0) + changingParameter.value
                 newValue = newValue > maxValue ? maxValue : newValue
                 newValue = newValue < -3 ? -3 : newValue
-                parameters.updateValue(newValue, forKey: changingParameter.key)
+                variables.updateValue(newValue, forKey: changingParameter.key)
             } else {
                 if changingParameter.key.first == "*" {
-                    parameters.updateValue(changingParameter.value, forKey: changingParameter.key)
+                    variables.updateValue(changingParameter.value, forKey: changingParameter.key)
                     Logger.playerService.info("Attention: Added  *parametr \(changingParameter.key)")
                 } else {
                     Logger.playerService.error("JSON error: \(changingParameter.key) is not possible to change a non-existent parameter if it is not *parameters ")
@@ -133,9 +140,13 @@ final class PlayerModel: PlayerModelProtocol {
             }
         }
         updateСalculatedParameters()
-        debugPrint(parameters)
+        debugPrint(variables)
     }
 
-
+    func getVariables(_ key: String) -> (Int?, String?) {
+        let foundParametersInt: Int? = variables[key]
+        let foundParametersString: String? = jsonVariables[key]
+        return (foundParametersInt, foundParametersString)
+    }
 
 }
