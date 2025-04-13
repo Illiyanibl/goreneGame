@@ -22,6 +22,7 @@ protocol MainPresenterProtocol: AnyObject {
 enum GameResult {
 case win
 case lose
+case noPlay
 }
 
 final class MainPresenter: MainPresenterProtocol {
@@ -138,6 +139,9 @@ final class MainPresenter: MainPresenterProtocol {
             gamesLoseParameters = [:]
             gamesWinParameters = [:]
             return
+        case .noPlay:
+            gamesLoseParameters = [:]
+            gamesWinParameters = [:]
         }
     }
 

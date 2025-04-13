@@ -30,6 +30,8 @@
 		5150D21F2D3D2FE000E1EC3C /* GameMemoriesCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5150D21E2D3D2FE000E1EC3C /* GameMemoriesCellView.swift */; };
 		51610AA72C10C4F200F46C53 /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51610AA62C10C4F200F46C53 /* Coordinator.swift */; };
 		51610AAB2C17681000F46C53 /* Fonts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51610AAA2C17681000F46C53 /* Fonts.swift */; };
+		5168327D2DA163E9001A922B /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 5168327C2DA163E9001A922B /* Localizable.xcstrings */; };
+		5168327F2DABC040001A922B /* MiniGameState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5168327E2DABC040001A922B /* MiniGameState.swift */; };
 		519529682BDBB92300EAECEE /* QuestState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 519529672BDBB92300EAECEE /* QuestState.swift */; };
 		519AB4742C0285BF00B855EC /* ruPrologue.json in Resources */ = {isa = PBXBuildFile; fileRef = 519AB4732C0285BF00B855EC /* ruPrologue.json */; };
 		519AB4762C03074900B855EC /* ModalMainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 519AB4752C03074900B855EC /* ModalMainView.swift */; };
@@ -90,6 +92,8 @@
 		5150D21E2D3D2FE000E1EC3C /* GameMemoriesCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameMemoriesCellView.swift; sourceTree = "<group>"; };
 		51610AA62C10C4F200F46C53 /* Coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
 		51610AAA2C17681000F46C53 /* Fonts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fonts.swift; sourceTree = "<group>"; };
+		5168327C2DA163E9001A922B /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
+		5168327E2DABC040001A922B /* MiniGameState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniGameState.swift; sourceTree = "<group>"; };
 		519529672BDBB92300EAECEE /* QuestState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestState.swift; sourceTree = "<group>"; };
 		519AB4732C0285BF00B855EC /* ruPrologue.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = ruPrologue.json; sourceTree = "<group>"; };
 		519AB4752C03074900B855EC /* ModalMainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalMainView.swift; sourceTree = "<group>"; };
@@ -248,6 +252,7 @@
 		519AB46E2C012BDB00B855EC /* JSON */ = {
 			isa = PBXGroup;
 			children = (
+				5168327C2DA163E9001A922B /* Localizable.xcstrings */,
 				519AB4722C02859000B855EC /* ru */,
 			);
 			path = JSON;
@@ -277,6 +282,7 @@
 		519CAECA2D5BC0EB00D0BED4 /* MiniGames */ = {
 			isa = PBXGroup;
 			children = (
+				5168327E2DABC040001A922B /* MiniGameState.swift */,
 				519CAECB2D5BC13D00D0BED4 /* GameMemoriesPresenter.swift */,
 				51CDD8732CF392A9005D558F /* ModalView */,
 			);
@@ -398,6 +404,15 @@
 			knownRegions = (
 				en,
 				Base,
+				ru,
+				bg,
+				fr,
+				es,
+				de,
+				it,
+				"zh-Hans",
+				ja,
+				pl,
 			);
 			mainGroup = 5111652A2B669B9C00CAB252;
 			productRefGroup = 511165342B669B9D00CAB252 /* Products */;
@@ -422,6 +437,7 @@
 				51EA5C952CB2CBA500B0D9F8 /* ruMinesS.json in Resources */,
 				51E8D6232C45277E0029590B /* ruFreeBrothersSCamp1.json in Resources */,
 				519C9B272C490181001B0320 /* ruFreeBrothersSCamp2.json in Resources */,
+				5168327D2DA163E9001A922B /* Localizable.xcstrings in Resources */,
 				5148DB3E2C95A63500C07082 /* ruMinesSA.json in Resources */,
 				519AB4742C0285BF00B855EC /* ruPrologue.json in Resources */,
 				511165402B669B9D00CAB252 /* Assets.xcassets in Resources */,
@@ -450,6 +466,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				51CDD8752CF392D2005D558F /* GameMemoriesModalView.swift in Sources */,
+				5168327F2DABC040001A922B /* MiniGameState.swift in Sources */,
 				519CAECC2D5BC13D00D0BED4 /* GameMemoriesPresenter.swift in Sources */,
 				519529682BDBB92300EAECEE /* QuestState.swift in Sources */,
 				519AB4762C03074900B855EC /* ModalMainView.swift in Sources */,

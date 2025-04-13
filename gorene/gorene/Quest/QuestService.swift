@@ -35,7 +35,7 @@ final class QuestService : QuestServiceProtocol {
     var currentQuestState: Int
     var currentQuest: QuestModel?
     weak var mainPresenter: MainPresenterProtocol?
-    weak var player: PlayerModelProtocol? // !!!Если в MainPresenter нет сильной ссылки и он не будет удерживать то сделать сильной!
+    weak var player: PlayerModelProtocol?
 
     init(currentQuest: QuestModel? = nil, currentQuestState: Int = 0) {
         self.currentQuestState = currentQuestState

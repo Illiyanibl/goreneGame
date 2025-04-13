@@ -31,6 +31,7 @@ struct ActionStruct: Decodable, Encodable, AlternativeElementProtocol {
     var exactParameters : [String : Int]? // параметр точного значения. Успешно когда этот же параметр у игрока равен. Для satate и навигвции
     var sumOfParameters  : [String : Int]? // сумма выбранных параметров, успешно если сумма этих же параметров у игрока равна либо больше
     var changingParameters: [String : Int]? // изменение параметра игрока по ключу
+    var setStringParameters: [String: String]? //
     var typeOfGame: String? // тип игры, имя игры в наборе игр
     var gamesWinParameters: [String : Int]?
     var gamesLoseParameters: [String : Int]?
