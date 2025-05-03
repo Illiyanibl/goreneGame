@@ -15,15 +15,13 @@ protocol QuestServiceProtocol: AnyObject{
     func checkTypeOfGame(action: ActionStruct?) -> TypeOfGame
     func checkGamesParameters(action: ActionStruct?, win defaultWinParameters: [String : Int], lose defaultLoseParameters: [String : Int]) -> ([String : Int], [String : Int])
     func elementIsPossible(element: AlternativeElementProtocol) -> Bool
-    func findMainText() -> String
+    func findMainText(intVariables: [String: Int], stringVariables: [String: String]) -> String
     func changeState(newState: Int)
     func changeQuest(newQuest: String, newState: Int)
 }
 protocol QuestServiceEdditProtocol: AnyObject {
     func addQuest(quest: QuestModel)
 }
-
-
 
 enum TypeOfGame {
     case memories
@@ -51,7 +49,6 @@ final class QuestService : QuestServiceProtocol {
             Logger.questService.error("JSON error: A quest with the same name already exists.")
             return }
         quests.append(quest)
-        // return quests.lastIndex(where: { _ in return true})
     }
 
     func checkTypeOfGame(action: ActionStruct?) -> TypeOfGame {
@@ -73,7 +70,7 @@ final class QuestService : QuestServiceProtocol {
     func elementIsPossible(element: AlternativeElementProtocol) -> Bool{
         guard let player else { return false}
         var isPossible = true
-        var altIsPossible = true
+        //     var altIsPossible = true
         var sumPlayerStats = 0
         var sumNeed = 0
         let requiredParameters = element.requiredParameters ?? [:]
@@ -103,13 +100,12 @@ final class QuestService : QuestServiceProtocol {
         return isPossible
     }
 
-    func findMainText() -> String {
+    func findMainText(intVariables: [String: Int], stringVariables: [String: String]) -> String {
         var mainText: String?
-        //currentQuestState
         let alternativesMainText = currentQuest?.questStates[currentQuestState].alternativeMainText
         guard let alternativesMainText else {
             mainText = currentQuest?.questStates[currentQuestState].mainText
-            return mainText ?? "Main text error"
+            return mainText ?? "Main text Error"
         }
         alternativesMainText.forEach(){ alternativeMainText in
             let isAcceptable = elementIsPossible(element: alternativeMainText)
@@ -117,40 +113,42 @@ final class QuestService : QuestServiceProtocol {
         }
         mainText == nil ? mainText = currentQuest?.questStates[currentQuestState].mainText : ()
 
-
-
-        return mainText ?? "Main text error"
+        return  replaceTextWithVariables(in: mainText ?? "Main text Error", intVariables: intVariables, stringVariables: stringVariables)
     }
 
-    private func replaceTextWithVariables(in text: String, with variables: [String: Any]) -> String {
+    private func replaceTextWithVariables(in text: String, intVariables: [String: Int], stringVariables: [String: String]
+    ) -> String {
         var result = ""
         var currentIndex = text.startIndex
 
-        while currentIndex < text.endIndex {
-            // Ищем символ "&"
-            if let ampersandIndex = text[currentIndex...].firstIndex(of: "&") {
-                // Добавляем всё до "&" в результат
-                result += text[currentIndex..<ampersandIndex]
+        while let ampersandIndex = text[currentIndex...].firstIndex(of: "&") {
+            result += text[currentIndex..<ampersandIndex]
+            let nextIndex = text.index(after: ampersandIndex)
 
-                // Находим конец имени переменной (до первого пробела, точки, запятой, символа или конца строки)
-                let startIndex = text.index(after: ampersandIndex)
-                if let endIndex = text[startIndex...].firstIndex(where: { $0.isWhitespace || $0.isPunctuation || $0.isSymbol}) {
-                    let variableName = String(text[startIndex..<endIndex])
-                    result += "\(variables[variableName] ?? variableName)"
-                    currentIndex = endIndex
-                } else {
-                    // Если пробел не найден, берем остаток строки
-                    let variableName = String(text[startIndex...])
-                    result += "\(variables[variableName] ?? variableName)"
-                    break
-                }
+            // Проверка на возможный * сразу после &
+            let isStar = nextIndex < text.endIndex && text[nextIndex] == "*"
+            let variableStartIndex = isStar ? text.index(after: nextIndex) : nextIndex
+
+            // Поиск конца имени переменной
+            let variableEndIndex = text[variableStartIndex...].firstIndex(where: {
+                $0.isWhitespace || $0.isPunctuation || $0.isSymbol
+            }) ?? text.endIndex
+
+            let rawVariableName = String(text[variableStartIndex..<variableEndIndex])
+            let fullVariableName = isStar ? "*" + rawVariableName : rawVariableName
+
+            if let stringValue = stringVariables[fullVariableName] {
+                result += stringValue
+            } else if let intValue = intVariables[fullVariableName] {
+                result += String(intValue)
             } else {
-                // Если "&" не найден, добавляем остаток строки
-                result += text[currentIndex...]
-                break
+                result += fullVariableName
             }
+
+            currentIndex = variableEndIndex
         }
 
+        result += text[currentIndex...]
         return result
     }
 
@@ -159,10 +157,10 @@ final class QuestService : QuestServiceProtocol {
         currentQuestState = newState
         mainPresenter?.newState()
     }
-    
+
     func changeQuest(newQuest: String, newState: Int = 0){
         let foundQuest: QuestModel? = quests.first(where: {$0.questName == newQuest})
-        guard let foundQuest else { 
+        guard let foundQuest else {
             let currentQuestName: String = currentQuest?.questName ?? "Not found current quest"
             let currentQuestSatateName: String = "\(currentQuestState)"
             Logger.questService.critical("It is impossible to find the quest \(newQuest) for quest \(currentQuestName) and quest state \(currentQuestSatateName)")

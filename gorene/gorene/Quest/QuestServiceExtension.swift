@@ -32,9 +32,9 @@ extension QuestService {
        // addQuestFromData(data: getDataFromJSON(jsonName: "cirticalErrorTest"))
         addQuestFromData(data: getDataFromJSON(jsonName: "ruFreeBrothersSCamp1"))
         addQuestFromData(data: getDataFromJSON(jsonName: "ruFreeBrothersSCamp2"))
-        addQuestFromData(data: getDataFromJSON(jsonName: "ruMinesA"))
-        addQuestFromData(data: getDataFromJSON(jsonName: "ruMinesS"))
-        addQuestFromData(data: getDataFromJSON(jsonName: "ruMinesSA"))
+        //addQuestFromData(data: getDataFromJSON(jsonName: "ruMinesA"))
+        //addQuestFromData(data: getDataFromJSON(jsonName: "ruMinesS"))
+        //addQuestFromData(data: getDataFromJSON(jsonName: "ruMinesSA"))
 
        // addQuest(quest: QuestModel(questName: "QuestBranching01",
        //                            questStart: { player, service in

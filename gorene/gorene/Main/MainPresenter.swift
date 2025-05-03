@@ -17,6 +17,8 @@ protocol MainPresenterProtocol: AnyObject {
     func gameResult(_ result: GameResult)
     //Player
     func getVariables(_ key: String) -> (Int?, String?)
+
+    func reLoadColorTheme()
 }
 
 enum GameResult {
@@ -59,7 +61,8 @@ final class MainPresenter: MainPresenterProtocol {
        //     mainView?.pushMainText(text: mainText)
         //    return
       //  }
-        let mainText: String = questService.findMainText()
+        let mainText: String = questService.findMainText(intVariables: player.variables, stringVariables: player.stringVariables)
+
         mainView?.pushMainText(text: mainText)
     }
 
@@ -93,6 +96,11 @@ final class MainPresenter: MainPresenterProtocol {
         guard let parameters else { return }
         player.changeVariables(parameters)
     }
+    private func setStringParameters(_ parameters: [String : String]?){
+        guard let parameters else { return }
+        player.setStringVariables(parameters)
+    }
+
 
     private func checkTypeOfGame(action: ActionStruct?) {
         let typeOfGame = questService.checkTypeOfGame(action: action)
@@ -150,6 +158,7 @@ final class MainPresenter: MainPresenterProtocol {
         let newState = actionPressed?.actionNextState
         let newCurrentQuestName = actionPressed?.actionNextQuest
         changeParameters(actionPressed?.changingParameters)
+        setStringParameters(actionPressed?.setStringParameters)
         if newCurrentQuestName == nil {
             guard let newState else { return }
             questService.changeState(newState: newState)
@@ -170,6 +179,10 @@ final class MainPresenter: MainPresenterProtocol {
         statusText != nil ? mainView?.pushStatusLabel(text: statusText ?? "Error") : ()
         pushMainText()
         pushActions()
+    }
+
+    func reLoadColorTheme(){
+        mainView?.getColorTheme()
     }
 
 

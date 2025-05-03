@@ -9,14 +9,15 @@ import Foundation
 import OSLog
 protocol PlayerModelProtocol: AnyObject {
     var variables: [String : Int] { get }
-    var jsonVariables: [String : String] { get }
+    var stringVariables: [String : String] { get }
     func changeVariables(_ parameters: [String : Int])
+    func setStringVariables (_  changingParameters: [String : String])
     func getVariables(_ key: String) -> (Int?, String?)
 }
 final class PlayerModel: PlayerModelProtocol {
     var name: String = ""
     private (set) var variables: [String : Int] = [:]
-    private (set) var jsonVariables: [String : String] = [:]
+    private (set) var stringVariables: [String : String] = [:]
 
     //var currentMainQuest: QuestModel? { questService.currentQuest }
     //vat currentQuestState: Int {}
@@ -119,6 +120,13 @@ final class PlayerModel: PlayerModelProtocol {
         return parameters
     }
 
+    func setStringVariables (_  changingParameters: [String : String]){
+        changingParameters.forEach(){ changingParameter in
+            stringVariables.updateValue(changingParameter.value, forKey: changingParameter.key)
+            debugPrint(stringVariables)
+        }
+
+    }
     func changeVariables(_ changingParameters: [String : Int]){
         changingParameters.forEach(){ changingParameter in
             variables[changingParameter.key] == nil ? lazyParametersInitial(key: changingParameter.key) : ()
@@ -143,9 +151,11 @@ final class PlayerModel: PlayerModelProtocol {
         debugPrint(variables)
     }
 
+    
+
     func getVariables(_ key: String) -> (Int?, String?) {
         let foundParametersInt: Int? = variables[key]
-        let foundParametersString: String? = jsonVariables[key]
+        let foundParametersString: String? = stringVariables[key]
         return (foundParametersInt, foundParametersString)
     }
 

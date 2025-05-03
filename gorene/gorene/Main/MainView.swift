@@ -96,12 +96,11 @@ final class MainView: UIViewController, MainViewProtocol {
     }()
 
     lazy var settingsButton: UIButton = {
-        let button: UIButton = CustomButton(title: "", action: { [weak self] in
-            if SettingsModel.share.colorTheme != .mainWhite {
-                SettingsModel.share.chooseColorTheme(colorTheme: .mainWhite)} else {
-                    SettingsModel.share.chooseColorTheme(colorTheme: .mainDarck)
-                }
-            self?.getColorTheme() })
+        let button: UIButton = CustomButton(title: "",
+                                            action: { [weak self] in
+            let settingsView =  SettingsView()
+            settingsView.mainPresenter = self?.mainPresenter
+            self?.showModalView(view: settingsView)})
         button.setBackgroundImage(UIImage(systemName: "gearshape"), for: .normal)
         button.layer.masksToBounds = true
         button.layer.cornerRadius = 25
@@ -228,7 +227,7 @@ final class MainView: UIViewController, MainViewProtocol {
     //MARK: pushState
     internal func showModalView(view:  ShowModalViewProtocol?){ // убрать в координатор !!!!!
         guard let view else { return }
-        let modalView = UIViewController() // 
+        let modalView = UIViewController() //
         modalView.view = view as? UIView
         self.navigationController?.present(modalView, animated: true)
     }
@@ -253,9 +252,9 @@ final class MainView: UIViewController, MainViewProtocol {
         if actionTitle.count > 4 { animateShowLongListAction()}
     }
 
-  //  private func actionIsLongList(){
-  //      animateShowLongListAction()
-  //  }
+    //  private func actionIsLongList(){
+    //      animateShowLongListAction()
+    //  }
 
     internal func pushStatusLabel(text: String){
         statusLabel.text = text
@@ -279,7 +278,7 @@ final class MainView: UIViewController, MainViewProtocol {
         view.layoutIfNeeded()
     }
     @objc func detailsViewClose(){
-                hideDetails()
+        hideDetails()
     }
 
     private func hideDetails(){
@@ -342,7 +341,6 @@ final class MainView: UIViewController, MainViewProtocol {
         animator.startAnimation(afterDelay: 0.0)
     }
 
-
     private func appleColorTheme(colors: [UIColor]){
         guard colors.count == 4 else { return }
         mainTextView.backgroundColor = colors[0]
@@ -350,7 +348,6 @@ final class MainView: UIViewController, MainViewProtocol {
         statusLabel.textColor = colors[2]
         mainTextLabel.textColor = colors[3].withAlphaComponent(1)
         settingsButton.backgroundColor = .clear
-        //colors[0]
         settingsButton.tintColor = colors[2].withAlphaComponent(1)
         playerButton.backgroundColor = colors[1]
         playerButton.tintColor = colors[2].withAlphaComponent(1)
