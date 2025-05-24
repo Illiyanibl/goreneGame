@@ -10,9 +10,13 @@ import OSLog
 protocol PlayerModelProtocol: AnyObject {
     var variables: [String : Int] { get }
     var stringVariables: [String : String] { get }
+    var name: String { get }
     func changeVariables(_ parameters: [String : Int])
     func setStringVariables (_  changingParameters: [String : String])
     func getVariables(_ key: String) -> (Int?, String?)
+    
+    func loadPlayer(loadName: String, loadVariables: [String : Int], loadStringVariables: [String : String])
+    func reStart()
 }
 final class PlayerModel: PlayerModelProtocol {
     var name: String = ""
@@ -20,8 +24,6 @@ final class PlayerModel: PlayerModelProtocol {
     private (set) var stringVariables: [String : String] = [:]
 
     //var currentMainQuest: QuestModel? { questService.currentQuest }
-    //vat currentQuestState: Int {}
-    //var currentQuest: [QuestModel] = []
     private var parametersMax:[String : Int] = [:]
     //все вычесляемые параметры
     var discipline: Int { (variables["disciplineBase"] ?? 0) + 2 }
@@ -30,7 +32,6 @@ final class PlayerModel: PlayerModelProtocol {
     var oratory:  Int { (variables["oratoryBase"] ?? 0) * 2 }
     var creative: Int { 10 }
     var technology: Int { 10 }
-
     //
     init(name: String) {
         self.name = name
@@ -53,7 +54,6 @@ final class PlayerModel: PlayerModelProtocol {
         parametersMax.updateValue(20, forKey: "energy")
         parametersMax.updateValue(12, forKey: "gameLavel")
         parametersMax.updateValue(99, forKey: "coins")
-
     }
 
     private func lazyParametersInitial(key: String) {
@@ -120,6 +120,20 @@ final class PlayerModel: PlayerModelProtocol {
         return parameters
     }
 
+    func loadPlayer(loadName: String, loadVariables: [String : Int], loadStringVariables: [String : String]){
+        name = loadName
+        variables = loadVariables
+        stringVariables = loadStringVariables
+        updateСalculatedParameters()
+    }
+
+    func reStart() {
+        stringVariables = [:]
+        variables = parametersInit()
+        updateСalculatedParameters()
+
+    }
+
     func setStringVariables (_  changingParameters: [String : String]){
         changingParameters.forEach(){ changingParameter in
             stringVariables.updateValue(changingParameter.value, forKey: changingParameter.key)
@@ -150,8 +164,6 @@ final class PlayerModel: PlayerModelProtocol {
         updateСalculatedParameters()
         debugPrint(variables)
     }
-
-    
 
     func getVariables(_ key: String) -> (Int?, String?) {
         let foundParametersInt: Int? = variables[key]

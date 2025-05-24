@@ -48,7 +48,6 @@ playground.xcworkspace
 
 .build/
 # Private JSON
-*.json
 **/JSON
 # CocoaPods
 #

@@ -1,5 +1,5 @@
 //
-//  QuestState.swift
+//  QuestStateModel.swift
 //  gorene
 //
 //  Created by Illya Blinov on 26.04.24.
@@ -12,9 +12,9 @@ protocol AlternativeElementProtocol {
 
 struct QuestStateCollection: Decodable, Encodable {
     let questName: String
-    let questStates: [QuestState]
+    let questStates: [QuestStateModel]
 }
-struct QuestState: Decodable, Encodable {
+struct QuestStateModel: Decodable, Encodable {
     let stateId: Int //id состояния для навигации
     var questStateModal: QuestStateModal? // при смене состояния, например выбрали действие показываем картинку анимировано. Если не надо показывать то не указываем
     var background: String? //имя картинки на фон, фон висит пока не будет передано имя другой картинки

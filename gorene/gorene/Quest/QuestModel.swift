@@ -9,9 +9,9 @@ import Foundation
 struct QuestModel {
     typealias questCallBack = ((_ player: inout PlayerModelProtocol, _ questService: QuestServiceProtocol)-> Void)
     var questName: String
-    var questStates = [QuestState]()
+    var questStates = [QuestStateModel]()
     var questStart: questCallBack?
-    mutating func stateAdd(state: QuestState) {
+    mutating func stateAdd(state: QuestStateModel) {
         questStates.append(state)
     }
 

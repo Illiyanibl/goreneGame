@@ -15,6 +15,7 @@ struct PlayerSaveModel: Codable {
 struct QuestProgress: Codable {
     let questName: String
     let stateId: Int
+    let lastBackground: String?
 }
 
 struct SaveSlotModel: Codable {

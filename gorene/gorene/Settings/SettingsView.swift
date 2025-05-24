@@ -57,7 +57,7 @@ final class SettingsView: UIView,  ShowModalViewProtocol {
     }
 
     private func reStartGame(){
-
+        mainPresenter?.reStart()
     }
 
     private func appleColorTheme(colors: [UIColor]){

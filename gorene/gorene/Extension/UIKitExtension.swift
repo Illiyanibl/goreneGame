@@ -12,6 +12,7 @@ extension Logger {
     private static var subsystem = Bundle.main.bundleIdentifier ?? "goreneGame"
     static let questService = Logger(subsystem: subsystem, category: "questService")
     static let playerService = Logger(subsystem: subsystem, category: "playerService")
+    static let saveLoadService =  Logger(subsystem: subsystem, category: "saveLoadService")
 }
 
 extension UIView{

@@ -13,12 +13,16 @@ protocol MainPresenterProtocol: AnyObject {
     func actionPressed(action: Int)
     //for QuestService
     func newState()
+    //for Settings
+    func reStart()
     //for game's presenters
     func gameResult(_ result: GameResult)
     //Player
+    var player: PlayerModelProtocol {get set}
     func getVariables(_ key: String) -> (Int?, String?)
-
     func reLoadColorTheme()
+
+
 }
 
 enum GameResult {
@@ -32,12 +36,16 @@ final class MainPresenter: MainPresenterProtocol {
     var modalMainView : MainModalViewProtocol?
     var modalGameView : GameMemoriesViewProtocol?
     let questService: QuestServiceProtocol
+    //
+    var saveLoadService: SaveLoadServiceProtocol
+    //
     var player: PlayerModelProtocol
     private var gamesWinParameters: [String : Int] = [:]
     private var gamesLoseParameters: [String : Int] = [:]
 
     init(mainView: MainViewProtocol? = nil) {
         self.mainView = mainView
+        self.saveLoadService = SaveLoadService()
         self.questService = QuestService()
         self.player = PlayerModel(name: "Player")
         questService.player = player
@@ -48,21 +56,12 @@ final class MainPresenter: MainPresenterProtocol {
 //MARK: private function
 
     private func start(){
-        questService.changeQuest(newQuest: "ruPrologue", newState: 0)
+        saveLoadService.loadAutoSave(questService: questService, player: player)
     }
 
-    private func pushMainText(){
-      //  var mainText: String
-      //  let state = questService.currentQuestState
-      //  let alternativeMainText = questService.currentQuest?.questStates[state].alternativeMainText
-       // print("alternativeMainText test \(questService.findMainText())")
-      //  guard let alternativeMainText else {
-      //      mainText = questService.currentQuest?.questStates[state].mainText ?? "Error"
-       //     mainView?.pushMainText(text: mainText)
-        //    return
-      //  }
-        let mainText: String = questService.findMainText(intVariables: player.variables, stringVariables: player.stringVariables)
 
+    private func pushMainText(){
+        let mainText: String = questService.findMainText(intVariables: player.variables, stringVariables: player.stringVariables)
         mainView?.pushMainText(text: mainText)
     }
 
@@ -127,6 +126,11 @@ final class MainPresenter: MainPresenterProtocol {
     }
 
     //MARK: MainPresenterProtocol function
+    func reStart(){
+        saveLoadService.deleteAutoSave()
+        start()
+    }
+
     func mainViewDidLoad(){
         newState()
     }
@@ -173,12 +177,15 @@ final class MainPresenter: MainPresenterProtocol {
         let state = questService.currentQuestState
         let stateModal: QuestStateModal? = questService.currentQuest?.questStates[state].questStateModal
         stateModal != nil ? showQuestStateModal(stateModal: stateModal) : ()
-        let background: String? = questService.currentQuest?.questStates[state].background
-        background != nil ? mainView?.pushBackgroundImage(background ?? "nil") : ()
+
+        questService.lastBackground != nil ? mainView?.pushBackgroundImage(questService.lastBackground ?? "nil") : ()
+
         let statusText: String? = questService.currentQuest?.questStates[state].status
         statusText != nil ? mainView?.pushStatusLabel(text: statusText ?? "Error") : ()
         pushMainText()
         pushActions()
+        //
+        saveLoadService.autoSave(questService: questService, player: player)
     }
 
     func reLoadColorTheme(){

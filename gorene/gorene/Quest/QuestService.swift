@@ -10,6 +10,7 @@ import OSLog
 protocol QuestServiceProtocol: AnyObject{
     var currentQuestState: Int { get }
     var currentQuest: QuestModel? { get }
+    var lastBackground: String? { get set }
     var mainPresenter: MainPresenterProtocol? { get set }
     var player: PlayerModelProtocol? { get set }
     func checkTypeOfGame(action: ActionStruct?) -> TypeOfGame
@@ -32,6 +33,7 @@ final class QuestService : QuestServiceProtocol {
     var quests: [QuestModel] = []
     var currentQuestState: Int
     var currentQuest: QuestModel?
+    var lastBackground: String?
     weak var mainPresenter: MainPresenterProtocol?
     weak var player: PlayerModelProtocol?
 
@@ -153,8 +155,9 @@ final class QuestService : QuestServiceProtocol {
     }
 
     func changeState(newState: Int){
-        guard (currentQuest?.questStates.enumerated().first(where: { $0.offset == newState }) != nil) else { return }
-        currentQuestState = newState
+        guard let stateIndex = currentQuest?.questStates.firstIndex(where: {$0.stateId == newState})  else { return }
+        currentQuestState = stateIndex // newState
+        currentQuest?.questStates[stateIndex].background != nil ? lastBackground = currentQuest?.questStates[stateIndex].background : ()
         mainPresenter?.newState()
     }
 
