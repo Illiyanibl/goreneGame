@@ -10,6 +10,7 @@ enum ColorTheme {
     case mainDarck
     case whiteText
     case mainWhite
+    case theEndOfSummer
 
     func getColor() -> [UIColor] {
         var colors: [UIColor] = []
@@ -29,6 +30,16 @@ enum ColorTheme {
             colors.append(UIColor(hex: "DDDDDD")?.withAlphaComponent(0.9) ?? UIColor.systemGray6)
             colors.append(UIColor(hex: "222222") ?? UIColor.darkGray)
             colors.append(UIColor(hex: "111111") ?? UIColor.black)
+        case .theEndOfSummer:
+            // светлый песочный фон для текста
+            colors.append(UIColor(hex: "#F8E7C9")?.withAlphaComponent(0.92) ?? UIColor.white)
+            // кнопки — нежный пастельно-коралловый рассвет
+            colors.append(UIColor(hex: "#F58A74")?.withAlphaComponent(0.95) ?? UIColor.systemGray6)
+            // текст на кнопках — белый, как морская пена
+            colors.append(UIColor(hex: "#FFFFFF") ?? UIColor.darkGray)
+            // глубокая морская бирюза для акцентов
+            colors.append(UIColor(hex: "#2C9E92") ?? UIColor.black)
+
         }
 
         if colors.count < 4 { colors = [UIColor.black, UIColor.systemGray, UIColor.white, UIColor.lightGray]}

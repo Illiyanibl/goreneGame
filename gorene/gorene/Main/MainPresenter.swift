@@ -31,7 +31,7 @@ case lose
 case noPlay
 }
 
-final class MainPresenter: MainPresenterProtocol {
+final class MainPresenter: MainPresenterProtocol, ShowModalViewDelegate {
     weak var mainView : MainViewProtocol?
     var modalMainView : MainModalViewProtocol?
     var modalGameView : GameMemoriesViewProtocol?
@@ -42,6 +42,10 @@ final class MainPresenter: MainPresenterProtocol {
     var player: PlayerModelProtocol
     private var gamesWinParameters: [String : Int] = [:]
     private var gamesLoseParameters: [String : Int] = [:]
+
+    private var queueModelView: [ShowModalViewProtocol] = []
+    private var isPresentingModalView = false
+    private var currentModal: ShowModalViewProtocol? = nil
 
     init(mainView: MainViewProtocol? = nil) {
         self.mainView = mainView
@@ -85,12 +89,6 @@ final class MainPresenter: MainPresenterProtocol {
         mainView?.pushActions(actionTitle: actionTitle, actionDetailsText: actionDescription, actionIsOn: actionIsOn)
     }
 
-    private func showQuestStateModal(stateModal: QuestStateModal?) {
-        guard let stateModal else { return }
-        modalMainView?.setupView(modalImage: stateModal.image, showingDuration: stateModal.duration, modalDescription: stateModal.description)
-        mainView?.showModalView(view: modalMainView)
-    }
-
     private func changeParameters(_ parameters: [String : Int]?){
         guard let parameters else { return }
         player.changeVariables(parameters)
@@ -122,7 +120,62 @@ final class MainPresenter: MainPresenterProtocol {
 
     private func showModalGameView(view: GameMemoriesViewProtocol) {
         self.modalGameView = view
+       // modalGameView?.delegateClose = self
         mainView?.showModalView(view: modalGameView)
+        //modalViewQueueAdd(view: modalGameView)
+    }
+
+    private func showQuestStateModal(stateModal: QuestStateModal?) {
+        guard let stateModal else { return }
+        modalMainView?.setupView(modalImage: stateModal.image, showingDuration: stateModal.duration, modalDescription: stateModal.description)
+       // modalMainView?.delegateClose = self
+        mainView?.showModalView(view: modalMainView)
+
+        //modalViewQueueAdd(view: modalMainView)
+    }
+
+    //MARK: Modal View Queue
+
+//    // Add modalView to Queue
+//    private func modalViewQueueAdd(view: ShowModalViewProtocol?) {
+//        guard let view = view else { return }
+//        queueModelView.append(view)
+//        debugPrint("enqueue count:", self.queueModelView.count, "id:", ObjectIdentifier(view as AnyObject))
+//
+//        // Если сейчас ничего не показывается, запускаем показ через короткую задержку
+//        if currentModal == nil {
+//            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+//                self.playModalViewQueue()
+//            }
+//        }
+//    }
+//
+//    // Запуск показа очередного модального окна
+//    private func playModalViewQueue() {
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { // небольшая задержка
+//            guard self.currentModal == nil else {
+//                debugPrint("Already presenting, skip play")
+//                return
+//            }
+//
+//            guard !self.queueModelView.isEmpty else {
+//                debugPrint("Очередь Modal View пуста")
+//                return
+//            }
+//
+//            // FIFO: берём первый элемент
+//            let nextModal = self.queueModelView.removeFirst()
+//            self.currentModal = nextModal
+//            nextModal.delegateClose = self
+//
+//            debugPrint("showing modal id:", ObjectIdentifier(nextModal as AnyObject))
+//            self.mainView?.showModalView(view: nextModal)
+//        }
+//    }
+//
+//    // Делегат — вызывается при закрытии модального окна
+    func modalViewDidClose(_ modalView: ShowModalViewProtocol) {
+
     }
 
     //MARK: MainPresenterProtocol function
@@ -173,18 +226,38 @@ final class MainPresenter: MainPresenterProtocol {
         checkTypeOfGame(action: actionPressed)
     }
 
-    func newState(){ // обработка нового состояния
+//    func newState(){ // обработка нового состояния
+//        let state = questService.currentQuestState
+//        let stateModal: QuestStateModal? = questService.currentQuest?.questStates[state].questStateModal
+//        stateModal != nil ? showQuestStateModal(stateModal: stateModal) : ()
+//
+//        questService.lastBackground != nil ? mainView?.pushBackgroundImage(questService.lastBackground ?? "nil") : ()
+//
+//        let statusText: String? = questService.currentQuest?.questStates[state].status
+//        statusText != nil ? mainView?.pushStatusLabel(text: statusText ?? "Error") : ()
+//        pushMainText()
+//        pushActions()
+//        //
+//        saveLoadService.autoSave(questService: questService, player: player)
+//    }
+    func newState() {
+        queueModelView = []
         let state = questService.currentQuestState
-        let stateModal: QuestStateModal? = questService.currentQuest?.questStates[state].questStateModal
-        stateModal != nil ? showQuestStateModal(stateModal: stateModal) : ()
 
-        questService.lastBackground != nil ? mainView?.pushBackgroundImage(questService.lastBackground ?? "nil") : ()
+        if let stateModal = questService.currentQuest?.questStates[state].questStateModal {
+            showQuestStateModal(stateModal: stateModal)
+        }
 
-        let statusText: String? = questService.currentQuest?.questStates[state].status
-        statusText != nil ? mainView?.pushStatusLabel(text: statusText ?? "Error") : ()
+        if let background = questService.lastBackground {
+            mainView?.pushBackgroundImage(background)
+        }
+
+        if let statusText = questService.currentQuest?.questStates[state].status {
+            mainView?.pushStatusLabel(text: statusText)
+        }
         pushMainText()
         pushActions()
-        //
+
         saveLoadService.autoSave(questService: questService, player: player)
     }
 

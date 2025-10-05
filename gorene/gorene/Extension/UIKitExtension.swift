@@ -36,9 +36,6 @@ extension UITextField {
 }
 
 extension UIButton.Configuration {
-  //  static func gray(){
-
- //   }
 }
 
 extension UIColor {

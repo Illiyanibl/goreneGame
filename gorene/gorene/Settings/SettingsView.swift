@@ -7,6 +7,7 @@
 
 import UIKit
 final class SettingsView: UIView,  ShowModalViewProtocol {
+    var delegateClose: ShowModalViewDelegate?
     lazy var settingsView: UIView = {
         let view = UIView()
         view.layer.masksToBounds = true
@@ -31,10 +32,6 @@ final class SettingsView: UIView,  ShowModalViewProtocol {
         setupUI()
     }
 
-
-
-
-    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -49,7 +46,7 @@ final class SettingsView: UIView,  ShowModalViewProtocol {
 
     private func changeColorTheme(){
         if SettingsModel.share.colorTheme != .mainWhite {
-            SettingsModel.share.chooseColorTheme(colorTheme: .mainWhite)} else {
+            SettingsModel.share.chooseColorTheme(colorTheme: .theEndOfSummer)} else {
                 SettingsModel.share.chooseColorTheme(colorTheme: .mainDarck)
             }
         appleColorTheme(colors: themeColor)

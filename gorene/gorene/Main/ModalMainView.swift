@@ -6,7 +6,14 @@
 //
 
 import UIKit
-protocol ShowModalViewProtocol: AnyObject {}
+protocol ShowModalViewProtocol: AnyObject {
+    var delegateClose: ShowModalViewDelegate? { get set }
+}
+
+protocol ShowModalViewDelegate: AnyObject {
+    func modalViewDidClose(_ modalView: ShowModalViewProtocol)
+}
+
 protocol MainModalViewProtocol: AnyObject, ShowModalViewProtocol {
    func setupView(modalImage: String?, showingDuration: Int?, modalDescription: String?)
 }
@@ -15,11 +22,13 @@ protocol ModalMainViewDelegateProtocol {
 }
 
 final class ModalMainView: UIView, MainModalViewProtocol {
+    
     var modalImage: String?
     var showingDuration: Int?
     var modalDescription: String?
     var themeColor : [UIColor] { SettingsModel.share.colorTheme.getColor()}
     var delegate: ModalMainViewDelegateProtocol?
+    var delegateClose: ShowModalViewDelegate?
     lazy var modalDescriptionLabel: UILabel = {
         let label = UILabel()
         label.lineBreakMode = .byWordWrapping
@@ -50,6 +59,13 @@ final class ModalMainView: UIView, MainModalViewProtocol {
         setupGesture()
         setupConstraints()
     }
+    
+    override func willMove(toSuperview newSuperview: UIView?) {
+            super.willMove(toSuperview: newSuperview)
+            if newSuperview == nil {
+                delegateClose?.modalViewDidClose(self)
+            }
+        }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -59,7 +75,6 @@ final class ModalMainView: UIView, MainModalViewProtocol {
         self.contentMode = .scaleAspectFill
         modalLabelview.addSubViews([modalDescriptionLabel])
         self.addSubViews([modalLabelview])
-
     }
 
     func setupView(modalImage: String?, showingDuration: Int?, modalDescription: String?){
@@ -87,6 +102,7 @@ final class ModalMainView: UIView, MainModalViewProtocol {
 
     @objc private func closeModalMainView(){
         delegate?.closeModalView(view: self)
+       // delegate?.modalViewDidClose(self)
         debugPrint("Push close button")
     }
 

@@ -27,6 +27,7 @@
 		513888D72C425DE3002D20C4 /* MainCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 513888D62C425DE3002D20C4 /* MainCoordinator.swift */; };
 		5148DB3C2C84AB1500C07082 /* ruMinesA.json in Resources */ = {isa = PBXBuildFile; fileRef = 5148DB3B2C84AB1500C07082 /* ruMinesA.json */; };
 		5148DB3E2C95A63500C07082 /* ruMinesSA.json in Resources */ = {isa = PBXBuildFile; fileRef = 5148DB3D2C95A63500C07082 /* ruMinesSA.json */; };
+		514D1DCE2DEC4C77005EC4D7 /* QuestConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 514D1DCD2DEC4C77005EC4D7 /* QuestConfiguration.swift */; };
 		5150D21F2D3D2FE000E1EC3C /* GameMemoriesCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5150D21E2D3D2FE000E1EC3C /* GameMemoriesCellView.swift */; };
 		51610AA72C10C4F200F46C53 /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51610AA62C10C4F200F46C53 /* Coordinator.swift */; };
 		51610AAB2C17681000F46C53 /* Fonts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51610AAA2C17681000F46C53 /* Fonts.swift */; };
@@ -94,6 +95,7 @@
 		513888D62C425DE3002D20C4 /* MainCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCoordinator.swift; sourceTree = "<group>"; };
 		5148DB3B2C84AB1500C07082 /* ruMinesA.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = ruMinesA.json; sourceTree = "<group>"; };
 		5148DB3D2C95A63500C07082 /* ruMinesSA.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = ruMinesSA.json; sourceTree = "<group>"; };
+		514D1DCD2DEC4C77005EC4D7 /* QuestConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestConfiguration.swift; sourceTree = "<group>"; };
 		5150D21E2D3D2FE000E1EC3C /* GameMemoriesCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameMemoriesCellView.swift; sourceTree = "<group>"; };
 		51610AA62C10C4F200F46C53 /* Coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
 		51610AAA2C17681000F46C53 /* Fonts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fonts.swift; sourceTree = "<group>"; };
@@ -158,7 +160,6 @@
 		5111652A2B669B9C00CAB252 = {
 			isa = PBXGroup;
 			children = (
-				519BC0512DE1D74600819808 /* noPrivateJSON */,
 				511165352B669B9D00CAB252 /* gorene */,
 				5111654C2B669B9E00CAB252 /* goreneTests */,
 				511165562B669B9E00CAB252 /* goreneUITests */,
@@ -179,6 +180,7 @@
 		511165352B669B9D00CAB252 /* gorene */ = {
 			isa = PBXGroup;
 			children = (
+				519BC0512DE1D74600819808 /* noPrivateJSON */,
 				519CAECA2D5BC0EB00D0BED4 /* MiniGames */,
 				51610AA52C10C4BC00F46C53 /* AppDelegate */,
 				519AB4FB2C0F95D400B855EC /* Fonts */,
@@ -187,9 +189,9 @@
 				51C80C922B6EE98900670F6E /* Quest */,
 				5111656E2B66A6E700CAB252 /* NPC.swift */,
 				5100D06C2BFBA45200B64A5F /* Services */,
+				514D1DCF2DEC57EA005EC4D7 /* JSON */,
 				51BC332C2B71566800F5E032 /* Settings */,
 				511165692B669F1C00CAB252 /* CustomView */,
-				519AB46E2C012BDB00B855EC /* JSON */,
 				512A62C22B696673005BD723 /* Extension */,
 				5111653F2B669B9D00CAB252 /* Assets.xcassets */,
 				511165412B669B9D00CAB252 /* LaunchScreen.storyboard */,
@@ -253,6 +255,14 @@
 			path = Extension;
 			sourceTree = "<group>";
 		};
+		514D1DCF2DEC57EA005EC4D7 /* JSON */ = {
+			isa = PBXGroup;
+			children = (
+				519AB4722C02859000B855EC /* ru */,
+			);
+			path = JSON;
+			sourceTree = "<group>";
+		};
 		51610AA52C10C4BC00F46C53 /* AppDelegate */ = {
 			isa = PBXGroup;
 			children = (
@@ -264,17 +274,10 @@
 			path = AppDelegate;
 			sourceTree = "<group>";
 		};
-		519AB46E2C012BDB00B855EC /* JSON */ = {
-			isa = PBXGroup;
-			children = (
-				519AB4722C02859000B855EC /* ru */,
-			);
-			path = JSON;
-			sourceTree = "<group>";
-		};
 		519AB4722C02859000B855EC /* ru */ = {
 			isa = PBXGroup;
 			children = (
+				519AB4732C0285BF00B855EC /* ruPrologue.json */,
 				519C9B262C490181001B0320 /* ruFreeBrothersSCamp2.json */,
 				51E8D6222C45277D0029590B /* ruFreeBrothersSCamp1.json */,
 				5148DB3D2C95A63500C07082 /* ruMinesSA.json */,
@@ -295,7 +298,6 @@
 		519BC0512DE1D74600819808 /* noPrivateJSON */ = {
 			isa = PBXGroup;
 			children = (
-				519AB4732C0285BF00B855EC /* ruPrologue.json */,
 			);
 			path = noPrivateJSON;
 			sourceTree = "<group>";
@@ -327,6 +329,7 @@
 				519529672BDBB92300EAECEE /* QuestStateModel.swift */,
 				512A62C92B697504005BD723 /* QuestService.swift */,
 				5100D06A2BF10D9100B64A5F /* QuestServiceExtension.swift */,
+				514D1DCD2DEC4C77005EC4D7 /* QuestConfiguration.swift */,
 			);
 			path = Quest;
 			sourceTree = "<group>";
@@ -500,6 +503,7 @@
 				519CAECC2D5BC13D00D0BED4 /* GameMemoriesPresenter.swift in Sources */,
 				519CC2652DC6562900731CD8 /* SaveSlotModel.swift in Sources */,
 				519529682BDBB92300EAECEE /* QuestStateModel.swift in Sources */,
+				514D1DCE2DEC4C77005EC4D7 /* QuestConfiguration.swift in Sources */,
 				519AB4762C03074900B855EC /* ModalMainView.swift in Sources */,
 				512A62C02B6962C8005BD723 /* MainView.swift in Sources */,
 				5111656F2B66A6E700CAB252 /* NPC.swift in Sources */,

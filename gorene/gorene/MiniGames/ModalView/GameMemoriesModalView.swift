@@ -20,6 +20,7 @@ enum TapState {
 final class GameMemoriesModalView: UIView, GameMemoriesViewProtocol {
     var themeColor : [UIColor] { SettingsModel.share.colorTheme.getColor()}
     var gameMemoriesPresenter: GameMemoriesPresenterProtocol
+    var delegateClose: ShowModalViewDelegate?
 
     let mainFontParagraphStyle: NSMutableParagraphStyle = {
         let paragraphStyle = NSMutableParagraphStyle()
@@ -100,10 +101,19 @@ final class GameMemoriesModalView: UIView, GameMemoriesViewProtocol {
         fatalError("init(coder:) has not been implemented")
         }
 
-    override func didMoveToWindow() {
-           super.didMoveToWindow()
-        if window == nil { gameMemoriesPresenter.viewClosed()}
-       }
+//    override func didMoveToWindow() {
+//           super.didMoveToWindow()
+//        if window == nil { gameMemoriesPresenter.viewClosed()}
+//       }
+
+    override func willMove(toSuperview newSuperview: UIView?) {
+            super.willMove(toSuperview: newSuperview)
+            if newSuperview == nil {
+              //  delegate?.modalViewDidClose(self)
+                gameMemoriesPresenter.viewClosed()
+            }
+        }
+
 
     func setupUI(){
         setCellsInteraction(state: .block)
@@ -114,6 +124,8 @@ final class GameMemoriesModalView: UIView, GameMemoriesViewProtocol {
         setupSubView()
     }
 
+
+
     private func setupSubView (){
         playZoneView.addSubViews([gameCollectionView])
         gameView.addSubViews([titleLabel, instructionLabel, startButton,  playZoneView])
@@ -122,12 +134,13 @@ final class GameMemoriesModalView: UIView, GameMemoriesViewProtocol {
     private func appleColorTheme(colors: [UIColor]){
         guard colors.count == 4 else { return }
         self.backgroundColor = colors[0]
-        titleLabel.textColor = colors[2]
+        titleLabel.textColor = colors[1]
         titleLabel.backgroundColor = colors[0]
         startButton.backgroundColor = colors[0]
-        startButton.setTitleColor(colors[2], for: .normal)
-        startButton.layer.borderColor = colors[2].cgColor
+        startButton.setTitleColor(colors[1], for: .normal)
+        startButton.layer.borderColor = colors[1].cgColor
         gameView.backgroundColor = colors[0]
+        instructionLabel.textColor = colors[3]
         playZoneView.backgroundColor = colors[0]
         gameCollectionView.backgroundColor = colors[2]
     }
