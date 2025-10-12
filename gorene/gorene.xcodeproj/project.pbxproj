@@ -20,6 +20,7 @@
 		5111656B2B669F6E00CAB252 /* CustomButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5111656A2B669F6E00CAB252 /* CustomButton.swift */; };
 		5111656F2B66A6E700CAB252 /* NPC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5111656E2B66A6E700CAB252 /* NPC.swift */; };
 		5116ED032E92DEC500A8AC9F /* ShowModalViewProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5116ED022E92DEAB00A8AC9F /* ShowModalViewProtocol.swift */; };
+		5116ED062E9BAD9700A8AC9F /* CustomModalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5116ED052E9BAD7F00A8AC9F /* CustomModalViewController.swift */; };
 		512A62C02B6962C8005BD723 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 512A62BF2B6962C8005BD723 /* MainView.swift */; };
 		512A62C42B6966D9005BD723 /* UIKitExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 512A62C32B6966D9005BD723 /* UIKitExtension.swift */; };
 		512A62C62B6973A7005BD723 /* PlayerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 512A62C52B6973A7005BD723 /* PlayerModel.swift */; };
@@ -89,6 +90,7 @@
 		5111656A2B669F6E00CAB252 /* CustomButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomButton.swift; sourceTree = "<group>"; };
 		5111656E2B66A6E700CAB252 /* NPC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NPC.swift; sourceTree = "<group>"; };
 		5116ED022E92DEAB00A8AC9F /* ShowModalViewProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowModalViewProtocol.swift; sourceTree = "<group>"; };
+		5116ED052E9BAD7F00A8AC9F /* CustomModalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomModalViewController.swift; sourceTree = "<group>"; };
 		512A62BF2B6962C8005BD723 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		512A62C32B6966D9005BD723 /* UIKitExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIKitExtension.swift; sourceTree = "<group>"; };
 		512A62C52B6973A7005BD723 /* PlayerModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerModel.swift; sourceTree = "<group>"; };
@@ -235,9 +237,19 @@
 			path = CustomView;
 			sourceTree = "<group>";
 		};
+		5116ED042E9BAD6A00A8AC9F /* ModalView */ = {
+			isa = PBXGroup;
+			children = (
+				5116ED052E9BAD7F00A8AC9F /* CustomModalViewController.swift */,
+				519AB4752C03074900B855EC /* ModalMainView.swift */,
+			);
+			path = ModalView;
+			sourceTree = "<group>";
+		};
 		512A62C12B6962EC005BD723 /* Main */ = {
 			isa = PBXGroup;
 			children = (
+				5116ED042E9BAD6A00A8AC9F /* ModalView */,
 				5116ED022E92DEAB00A8AC9F /* ShowModalViewProtocol.swift */,
 				5168327C2DA163E9001A922B /* Localizable.xcstrings */,
 				512A62BF2B6962C8005BD723 /* MainView.swift */,
@@ -245,7 +257,6 @@
 				512A62C52B6973A7005BD723 /* PlayerModel.swift */,
 				51C80C932B6EEA7E00670F6E /* MainPresenter.swift */,
 				51C80C902B6EE91800670F6E /* TableButtonViewCell.swift */,
-				519AB4752C03074900B855EC /* ModalMainView.swift */,
 			);
 			path = Main;
 			sourceTree = "<group>";
@@ -502,6 +513,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				51CDD8752CF392D2005D558F /* GameMemoriesModalView.swift in Sources */,
+				5116ED062E9BAD9700A8AC9F /* CustomModalViewController.swift in Sources */,
 				5168327F2DABC040001A922B /* MiniGameState.swift in Sources */,
 				519CAECC2D5BC13D00D0BED4 /* GameMemoriesPresenter.swift in Sources */,
 				519CC2652DC6562900731CD8 /* SaveSlotModel.swift in Sources */,

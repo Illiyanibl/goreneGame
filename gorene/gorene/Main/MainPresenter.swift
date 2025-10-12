@@ -22,7 +22,6 @@ protocol MainPresenterProtocol: AnyObject {
     func getVariables(_ key: String) -> (Int?, String?)
     func reLoadColorTheme()
 
-
 }
 
 enum GameResult {
@@ -32,6 +31,7 @@ case noPlay
 }
 
 final class MainPresenter: MainPresenterProtocol, ShowModalViewDelegate {
+    
     weak var mainView : MainViewProtocol?
     var modalMainView : MainModalViewProtocol?
     var modalGameView : GameMemoriesViewProtocol?
@@ -44,7 +44,7 @@ final class MainPresenter: MainPresenterProtocol, ShowModalViewDelegate {
     private var gamesLoseParameters: [String : Int] = [:]
 
     private var queueModelView: [ShowModalViewProtocol] = []
-    private var isPresentingModalView = false
+   // private var isPresentingModalView = false
     private var currentModal: ShowModalViewProtocol? = nil
 
     init(mainView: MainViewProtocol? = nil) {
@@ -120,23 +120,38 @@ final class MainPresenter: MainPresenterProtocol, ShowModalViewDelegate {
 
     private func showModalGameView(view: GameMemoriesViewProtocol) {
         self.modalGameView = view
+        guard let modalGameView else { return }
        // modalGameView?.delegateClose = self
-        mainView?.showModalView(view: modalGameView)
-        //modalViewQueueAdd(view: modalGameView)
+       // mainView?.showModalView(view: modalGameView)
+        modalViewQueueAdd(view: modalGameView)
     }
 
     private func showQuestStateModal(stateModal: QuestStateModal?) {
         guard let stateModal else { return }
-        modalMainView?.setupView(modalImage: stateModal.image, showingDuration: stateModal.duration, modalDescription: stateModal.description)
+        guard let modalMainView else { return }
+        modalMainView.setupView(modalImage: stateModal.image, showingDuration: stateModal.duration, modalDescription: stateModal.description)
         // modalMainView?.delegateClose = self
-        mainView?.showModalView(view: modalMainView)
-        //modalViewQueueAdd(view: modalMainView)
+        //mainView?.showModalView(view: modalMainView)
+        modalViewQueueAdd(view: modalMainView)
     }
 
     //MARK: Modal View Queue
 
-    func modalViewDidClose(_ modalView: ShowModalViewProtocol) {
+    private func modalViewQueueAdd(view: ShowModalViewProtocol){
+        queueModelView.append(view)
     }
+
+
+    private func showModalStack(_ views: [ShowModalViewProtocol]) {
+        debugPrint("showModalStack show \(views)")
+        guard !views.isEmpty else { return }
+        let modalVC = CustomModalViewController(modalViews: views)
+        mainView?.presentModalController(modalVC)
+    }
+
+    func modalViewDidClose(_ modalView: any ShowModalViewProtocol) {
+    }
+
 
     //MARK: MainPresenterProtocol function
     func reStart(){
@@ -176,6 +191,9 @@ final class MainPresenter: MainPresenterProtocol, ShowModalViewDelegate {
         let newCurrentQuestName = actionPressed?.actionNextQuest
         changeParameters(actionPressed?.changingParameters)
         setStringParameters(actionPressed?.setStringParameters)
+
+        checkTypeOfGame(action: actionPressed)
+
         if newCurrentQuestName == nil {
             guard let newState else { return }
             questService.changeState(newState: newState)
@@ -183,7 +201,6 @@ final class MainPresenter: MainPresenterProtocol, ShowModalViewDelegate {
             guard let newCurrentQuestName else { return }
             questService.changeQuest(newQuest: newCurrentQuestName, newState: newState ?? 0)
         }
-        checkTypeOfGame(action: actionPressed)
     }
 
 //    func newState(){ // обработка нового состояния
@@ -201,12 +218,13 @@ final class MainPresenter: MainPresenterProtocol, ShowModalViewDelegate {
 //        saveLoadService.autoSave(questService: questService, player: player)
 //    }
     func newState() {
-        queueModelView = []
         let state = questService.currentQuestState
-
+        // показываем модалки текущего состояния
         if let stateModal = questService.currentQuest?.questStates[state].questStateModal {
             showQuestStateModal(stateModal: stateModal)
         }
+        showModalStack(queueModelView)
+        queueModelView.removeAll()
 
         if let background = questService.lastBackground {
             mainView?.pushBackgroundImage(background)
@@ -215,9 +233,9 @@ final class MainPresenter: MainPresenterProtocol, ShowModalViewDelegate {
         if let statusText = questService.currentQuest?.questStates[state].status {
             mainView?.pushStatusLabel(text: statusText)
         }
+
         pushMainText()
         pushActions()
-
         saveLoadService.autoSave(questService: questService, player: player)
     }
 

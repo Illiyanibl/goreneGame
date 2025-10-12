@@ -13,6 +13,7 @@ protocol MainViewProtocol: AnyObject {
     func pushMainText(text: String)
     func pushActions(actionTitle: [String], actionDetailsText: [String?], actionIsOn: [Bool])
     func showModalView(view:  ShowModalViewProtocol?) // убрать в координатор
+    func presentModalController(_ viewController: UIViewController)
 }
 
 final class MainView: UIViewController, MainViewProtocol {
@@ -231,6 +232,10 @@ final class MainView: UIViewController, MainViewProtocol {
         modalView.view = view as? UIView
         self.navigationController?.present(modalView, animated: true)
     }
+
+    internal func presentModalController(_ viewController: UIViewController) {
+            self.navigationController?.present(viewController, animated: true)
+        }
 
     internal func pushBackgroundImage(_ image: String){
         let backgraungImage = UIImage(named: image)
