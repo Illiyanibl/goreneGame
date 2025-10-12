@@ -19,6 +19,7 @@
 		511165672B669CCD00CAB252 /* FirstView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 511165662B669CCD00CAB252 /* FirstView.swift */; };
 		5111656B2B669F6E00CAB252 /* CustomButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5111656A2B669F6E00CAB252 /* CustomButton.swift */; };
 		5111656F2B66A6E700CAB252 /* NPC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5111656E2B66A6E700CAB252 /* NPC.swift */; };
+		5116ED032E92DEC500A8AC9F /* ShowModalViewProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5116ED022E92DEAB00A8AC9F /* ShowModalViewProtocol.swift */; };
 		512A62C02B6962C8005BD723 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 512A62BF2B6962C8005BD723 /* MainView.swift */; };
 		512A62C42B6966D9005BD723 /* UIKitExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 512A62C32B6966D9005BD723 /* UIKitExtension.swift */; };
 		512A62C62B6973A7005BD723 /* PlayerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 512A62C52B6973A7005BD723 /* PlayerModel.swift */; };
@@ -87,6 +88,7 @@
 		511165662B669CCD00CAB252 /* FirstView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstView.swift; sourceTree = "<group>"; };
 		5111656A2B669F6E00CAB252 /* CustomButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomButton.swift; sourceTree = "<group>"; };
 		5111656E2B66A6E700CAB252 /* NPC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NPC.swift; sourceTree = "<group>"; };
+		5116ED022E92DEAB00A8AC9F /* ShowModalViewProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowModalViewProtocol.swift; sourceTree = "<group>"; };
 		512A62BF2B6962C8005BD723 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		512A62C32B6966D9005BD723 /* UIKitExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIKitExtension.swift; sourceTree = "<group>"; };
 		512A62C52B6973A7005BD723 /* PlayerModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerModel.swift; sourceTree = "<group>"; };
@@ -236,6 +238,7 @@
 		512A62C12B6962EC005BD723 /* Main */ = {
 			isa = PBXGroup;
 			children = (
+				5116ED022E92DEAB00A8AC9F /* ShowModalViewProtocol.swift */,
 				5168327C2DA163E9001A922B /* Localizable.xcstrings */,
 				512A62BF2B6962C8005BD723 /* MainView.swift */,
 				51DFFF802B6EDF0400499FE9 /* MainViewExtension.swift */,
@@ -513,6 +516,7 @@
 				5150D21F2D3D2FE000E1EC3C /* GameMemoriesCellView.swift in Sources */,
 				512A62C62B6973A7005BD723 /* PlayerModel.swift in Sources */,
 				51610AAB2C17681000F46C53 /* Fonts.swift in Sources */,
+				5116ED032E92DEC500A8AC9F /* ShowModalViewProtocol.swift in Sources */,
 				519CC26C2DCE07FB00731CD8 /* SaveLoadService.swift in Sources */,
 				512A62CA2B697504005BD723 /* QuestService.swift in Sources */,
 				511165672B669CCD00CAB252 /* FirstView.swift in Sources */,

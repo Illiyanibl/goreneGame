@@ -128,54 +128,14 @@ final class MainPresenter: MainPresenterProtocol, ShowModalViewDelegate {
     private func showQuestStateModal(stateModal: QuestStateModal?) {
         guard let stateModal else { return }
         modalMainView?.setupView(modalImage: stateModal.image, showingDuration: stateModal.duration, modalDescription: stateModal.description)
-       // modalMainView?.delegateClose = self
+        // modalMainView?.delegateClose = self
         mainView?.showModalView(view: modalMainView)
-
         //modalViewQueueAdd(view: modalMainView)
     }
 
     //MARK: Modal View Queue
 
-//    // Add modalView to Queue
-//    private func modalViewQueueAdd(view: ShowModalViewProtocol?) {
-//        guard let view = view else { return }
-//        queueModelView.append(view)
-//        debugPrint("enqueue count:", self.queueModelView.count, "id:", ObjectIdentifier(view as AnyObject))
-//
-//        // Если сейчас ничего не показывается, запускаем показ через короткую задержку
-//        if currentModal == nil {
-//            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-//                self.playModalViewQueue()
-//            }
-//        }
-//    }
-//
-//    // Запуск показа очередного модального окна
-//    private func playModalViewQueue() {
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { // небольшая задержка
-//            guard self.currentModal == nil else {
-//                debugPrint("Already presenting, skip play")
-//                return
-//            }
-//
-//            guard !self.queueModelView.isEmpty else {
-//                debugPrint("Очередь Modal View пуста")
-//                return
-//            }
-//
-//            // FIFO: берём первый элемент
-//            let nextModal = self.queueModelView.removeFirst()
-//            self.currentModal = nextModal
-//            nextModal.delegateClose = self
-//
-//            debugPrint("showing modal id:", ObjectIdentifier(nextModal as AnyObject))
-//            self.mainView?.showModalView(view: nextModal)
-//        }
-//    }
-//
-//    // Делегат — вызывается при закрытии модального окна
     func modalViewDidClose(_ modalView: ShowModalViewProtocol) {
-
     }
 
     //MARK: MainPresenterProtocol function

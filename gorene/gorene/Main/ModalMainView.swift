@@ -6,14 +6,6 @@
 //
 
 import UIKit
-protocol ShowModalViewProtocol: AnyObject {
-    var delegateClose: ShowModalViewDelegate? { get set }
-}
-
-protocol ShowModalViewDelegate: AnyObject {
-    func modalViewDidClose(_ modalView: ShowModalViewProtocol)
-}
-
 protocol MainModalViewProtocol: AnyObject, ShowModalViewProtocol {
    func setupView(modalImage: String?, showingDuration: Int?, modalDescription: String?)
 }
@@ -22,7 +14,6 @@ protocol ModalMainViewDelegateProtocol {
 }
 
 final class ModalMainView: UIView, MainModalViewProtocol {
-    
     var modalImage: String?
     var showingDuration: Int?
     var modalDescription: String?
@@ -102,7 +93,6 @@ final class ModalMainView: UIView, MainModalViewProtocol {
 
     @objc private func closeModalMainView(){
         delegate?.closeModalView(view: self)
-       // delegate?.modalViewDidClose(self)
         debugPrint("Push close button")
     }
 

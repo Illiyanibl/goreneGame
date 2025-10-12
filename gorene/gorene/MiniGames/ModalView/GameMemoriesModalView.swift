@@ -101,15 +101,10 @@ final class GameMemoriesModalView: UIView, GameMemoriesViewProtocol {
         fatalError("init(coder:) has not been implemented")
         }
 
-//    override func didMoveToWindow() {
-//           super.didMoveToWindow()
-//        if window == nil { gameMemoriesPresenter.viewClosed()}
-//       }
-
     override func willMove(toSuperview newSuperview: UIView?) {
             super.willMove(toSuperview: newSuperview)
             if newSuperview == nil {
-              //  delegate?.modalViewDidClose(self)
+                delegateClose?.modalViewDidClose(self)
                 gameMemoriesPresenter.viewClosed()
             }
         }
